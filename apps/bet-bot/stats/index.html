@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Mihail Latyshov" />
+	<title>Stats &middot; iRacing Twitch Bet Bot</title>
+	<!-- bootstrap -->
+	<link rel="stylesheet" type="text/css" href="/libs/bootstrap/css/bootstrap.min.css">
+	<!-- less -->
+	<link rel="stylesheet/less" type="text/css" href="css/app.less" />
+	<script src="/libs/less.min.js"></script>
+</head>
+<body>
+
+	<script type="text/x-handlebars" data-template-name="index">
+		<section class="stats-board">
+			<header>
+				<h1>Bet Leaderboard</h1>
+			</header>
+
+			{{#view "topUsers"}}
+				{{#each top_user in state.top_users itemViewClass="topUser"}}
+					<div class="amount">
+						<div {{bind-attr title=view.amountFormatted}}>{{dosh-fmt top_user.amount}}</div>
+					</div>
+					<div class="username">
+						<div {{bind-attr title=top_user.username}}>{{top_user.username}}</div>
+					</div>
+				{{/each}}
+			{{/view}}
+
+			<footer>
+				{{state.total_users}}
+				<i class="glyphicon glyphicon-eye-open"></i>
+				{{dosh-fmt state.total_amount}} {{state.currency}}
+			</footer>
+		</section>
+	</script>
+
+	<script src="/libs/jquery.min.js"></script>
+	<script src="/libs/ember/handlebars-v2.0.0.js"></script>
+	<script src="/libs/ember/ember.min.js"></script>
+	<script src="/libs/coffee-script.js"></script>
+	<script src="../js/ws.coffee" type="text/coffeescript"></script>
+	<script src="../js/bet-handlebars-helpers.coffee" type="text/coffeescript"></script>
+	<script src="js/app.coffee" type="text/coffeescript"></script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<div class="row">
+
+	<div class="col-md-12">
+
+		<xmp app-markdown>
+		## About
+
+		To involve people into your race more than ever before I introduce you — iRacing Twitch Bet Bot.
+
+		Yes, bet bot.
+
+		Idea was stolen from [Joshimuz](http://twitch.tv/joshimuz) streamer of GTA:SA speedruns.
+
+		This is only **just for fun**, and to bring more entertainment to your viewers and to you.
+
+		You **don't allow** to use it to win/lose real money of your viewers.
+
+		You **allow** to do giveaways (iRacing content/credits, Steam keys, etc...).
+
+		## Install
+
+		1. Download and unzip [iRacingBrowserApps](/downloads/iRacingBrowserApps.zip)
+		2. Install [OBS Studio](https://obsproject.com/download) (use **Full-Installer** with Browser plugin)
+		3. Run `betbot.exe` once, it will create `betbot.ini` file
+		4. Edit betbot.ini
+		```
+		channel = <YOUR TWITCH CHANNEL NAME>
+		currency = <AnythingDosh>
+		```
+		5. Run `betbot.exe` again
+
+		## Setup Overlay
+
+		1. Add bets table view to your stream:
+
+			1. Add **BrowserSource** layer in OBS Studio with URL `https://ir-apps.kutu.ru/bet-bot/bets/`
+			2. Width x Height: 210x236 (you can adjust height by 22px)
+
+			You will not see table until **Grid** button available in your race
+
+			![](img/bet2.jpg)
+
+		2. Optionally you can add current "Bet Leaderboard":
+
+			1. Add **BrowserSource** layer in OBS Studio with URL `https://ir-apps.kutu.ru/bet-bot/stats/`
+			2. Width x Height: Top5 = 200x172, Top10 = 200x282 (you can adjust height by 22px)
+
+			![](img/bet3.jpg)
+
+		3. For streaming PC use those urls:
+
+		   1. http://ir-apps.kutu.ru/bet-bot/bets/#/?host=iracing_pc_ip:8183
+		   2. http://ir-apps.kutu.ru/bet-bot/stats/#/?host=iracing_pc_ip:8183
+
+		## Chat commands
+
+		- `!bet faq` print faq
+		- `!bet stats` print top 5 of current leaderboard
+		- `!bet amount` print your current account
+		- `!bet <type> <amount>` make a bet, where
+			- **type**: win | top5 | finish | crash
+			- **amount**: 100 | 1k | 1.82k | 4.4m | 2b | half | all
+
+		Commands for channel owner only:
+		- `!bet win` `!bet top5` `!bet finish` `!bet crash` force bet results
+		- `!bet reset` reset current leaderboard
+
+		## Betting process
+
+		1. Bets opened when session turned into "Race" state ("Grid" button appear). Bot will inform viewers in chat about it
+		2. Bets table will shown in the stream with current payouts for each bet
+		3. Viewers can start making bets
+		4. After green lights, payouts start decreasing
+		5. Bets closed in the middle of the race. Viewers now can't make bets. Bot will inform viewers in chat about it
+		6. When race is over, and you see checkered flag, you can leave your car, but **you MUST wait until "official results" available** (race timer after checkered flag changed to something like "1:30" and goes down, this time given to other drivers to finish their last lap, after this timer ended, session goes to "officially ended", and "official results" available)
+
+		## What bets, when wins
+
+		Only one bet win at the end. If viewer bet on "finish", but you finish 1st, that mean "win" bet wins, and other bets lose.
+
+		**Win** happens only if you win the race
+
+		**Top5** happens only if you finish from 2nd to 5th positions
+
+		**Finish** happens only if you finish 6th and lower
+
+		**Crash** happens if you:
+		- started the race (green light) and then leave cockpit
+		- leave cockpit before checkered flag, while you are on track (not in pit)
+		- exit iRacing before "official results" available (see "Betting process" step 6.)
+		- iRacing crashed
+
+		## Payouts
+
+		**Win** starts from x10, +1 for every start position behind 1st place. Decreasing by 4 times after green light came out (1 + (x - 1) / 4). Eg. if you start 5th payout will x14, and x4.25 after green light
+
+		**Top5** starts from x5, +0.5 for every start position behind 5th place, and -0.5 for every start position in front of 5th place. Decreasing by 3 times after green flag came out. Eg. if you start 10th payout will x7.5, if you start 2nd payout will x3.5
+
+		**Finish** between x1.5 - x2.0, depends on how far away you start from the middle of the grid. Decreasing by 2 times after green flag came out
+
+		**Crash** between x2 - x4, depends on how far away you start from the middle of the grid. Decreasing by 2 times after green flag came out
+
+		### Other stuff, not mentioned before
+
+		- Viewers can do only one bet per race
+		- You can leave cockpit, when checkered flag is shown, it will not be interpreted as "crash", but then you must wait "official results"
+		- Viewers start with 1000 Dosh
+		- If viewer lose all his Dosh, he will automagically start again with 100 Dosh
+		- Payouts start decreasing after race is actually starts, that mean, better to make a bet before race start
+		- If you want to see the same window of bets as on stream, you can open it in your browser with the same URL
+		- By default, bets will works only in official races, you can change it in config.ini
+		- By default, bot account used in chat is "Batmancave", but you can change it in config.ini
+		- Streamer can't make bet on yourself, it can impact viewers decision. But if you want, you can create another account on twitch, and make bets on yourself from that account
+
+		PS Thanks to [Juha-Pekka Lammi](http://members.iracing.com/membersite/member/CareerStats.do?custid=71846) and [John Cook](http://members.iracing.com/membersite/member/CareerStats.do?custid=133215) for being a testers. Hit dat follow button on their Twitch channels: [JPlays](http://www.twitch.tv/jplays), [Airmessy](http://www.twitch.tv/jplays).
+		</xmp>
+
+	</div>
+
+</div>

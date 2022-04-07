@@ -1,0 +1,178 @@
+<div class="row settings">
+
+	<div class="col-md-12">
+
+		<form class="form-horizontal">
+			<!-- host -->
+			<div class="form-group">
+				<label for="inputHost" class="col-sm-3 control-label">Server</label>
+				<div class="col-sm-9">
+					<div class="input-group">
+						<input ng-model="settings.host" ng-change="saveSettings()" type="text" class="form-control" id="inputHost" placeholder="127.0.0.1:8182" />
+						<span class="input-group-btn">
+							<a ng-if="wsConnected == true" class="btn btn-success">
+								<i class="glyphicon glyphicon-ok-circle"></i>
+							</a>
+							<a ng-if="wsConnected == false" class="btn btn-danger">
+								<i class="glyphicon glyphicon-remove-circle"></i>
+							</a>
+							<button class="btn btn-default" type="button"
+									data-toggle="popover"
+									data-content="iRacing Browser Apps Server ip_address:port.">
+								<i class="glyphicon glyphicon-question-sign"></i>
+							</button>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- announce -->
+			<div class="form-group">
+				<label for="inputAnnounceLang" class="col-sm-3 control-label">Announcer</label>
+				<div class="col-sm-9">
+					<div class="input-group">
+						<select ng-model="settings.announceLang" ng-options="i.name for i in announceLangOptions track by i.name" ng-change="saveSettings()" ng-required="true" class="form-control"></select>
+						<span class="input-group-btn">
+								<i class="glyphicon glyphicon-question-sign"></i>
+							</button> -->
+							<a ng-click="testAnnounceLanguage()" class="btn btn-default">Test</a>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- announce volume -->
+			<div class="form-group">
+				<label for="inputAnnounceVolume" class="col-sm-3 control-label">Volume</label>
+				<div class="col-sm-9">
+					<div class="input-group">
+						<span ng-bind="announceVolume" class="input-group-addon" id="announceVolumeValue"></span>
+						<input ng-model="announceVolume" ng-change="announceVolumeChange()" type="range" min="0" max="100" step="5" class="form-control" id="inputAnnounceVolume" />
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button"
+									data-toggle="popover"
+									data-content="Volume saved for each car individually">
+								<i class="glyphicon glyphicon-question-sign"></i>
+							</button>
+							<a ng-click="testAnnounceLanguage()" class="btn btn-default">Test</a>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- announce usage per lap -->
+			<div class="form-group">
+				<label for="inputAnnouncePerLap" class="col-sm-3 control-label">Usage Per Lap</label>
+				<div class="col-sm-9">
+					<div class="input-group">
+						<span class="input-group-addon">
+							<input ng-model="settings.announcePerLap" ng-change="saveSettings()" type="checkbox" id="inputAnnouncePerLap">
+						</span>
+						<input ng-model="settings.announcePerLapTmpl" ng-change="saveSettings()" ng-enter="testAnnouncePerLap()" type="text" class="form-control">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button"
+									data-toggle="popover"
+									title="Template values"
+									data-content="{0} - real number (2.57)<br>{1} - real number (2.6)<br>{2} - rounded up (3)<br>{3} - rounded down (2)">
+								<i class="glyphicon glyphicon-question-sign"></i>
+							</button>
+							<a ng-click="testAnnouncePerLap()" class="btn btn-default">Test</a>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- announce remain laps -->
+			<div class="form-group">
+				<label for="inputAnnounceRemainLaps" class="col-sm-3 control-label">Remain Laps</label>
+				<div class="col-sm-9">
+					<div class="input-group">
+						<span class="input-group-addon">
+							<input ng-model="settings.announceRemainLaps" ng-change="saveSettings()" type="checkbox" id="inputAnnounceRemainLaps">
+						</span>
+						<input ng-model="settings.announceRemainLapsTmpl" ng-change="saveSettings()" ng-enter="testAnnounceRemainLaps()" type="text" class="form-control">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button"
+									data-toggle="popover"
+									title="Template values"
+									data-content="{0} - real number (51.63)<br>{1} - real number (51.6)<br>{2} - rounded up (52)<br>{3} - rounded down (51)">
+								<i class="glyphicon glyphicon-question-sign"></i>
+							</button>
+							<a ng-click="testAnnounceRemainLaps()" class="btn btn-default">Test</a>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- announce need refuel -->
+			<div class="form-group">
+				<label for="inputAnnounceNeedRefuel" class="col-sm-3 control-label">Need Refuel</label>
+				<div class="col-sm-9">
+					<div class="input-group">
+						<span class="input-group-addon">
+							<input ng-model="settings.announceNeedRefuel" ng-change="saveSettings()" type="checkbox" id="inputAnnounceNeedRefuel">
+						</span>
+						<input ng-model="settings.announceNeedRefuelTmpl" ng-change="saveSettings()" ng-enter="testAnnounceNeedRefuel()" type="text" class="form-control">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button"
+									data-toggle="popover"
+									title="Template values"
+									data-content="{0} - real number (37.28)<br>{1} - real number (37.3)<br>{2} - rounded up (38)<br>{3} - rounded down (37)">
+								<i class="glyphicon glyphicon-question-sign"></i>
+							</button>
+							<a ng-click="testAnnounceNeedRefuel()" class="btn btn-default">Test</a>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- announce after laps -->
+			<div class="form-group">
+				<label for="inputAnnounceAfterLaps" class="col-sm-3 control-label">Announce After</label>
+				<div class="col-sm-9">
+					<div class="input-group">
+						<span class="input-group-addon">Laps</span>
+						<input ng-model="settings.announceAfterLaps" ng-change="saveSettings()" type="number" min="3" class="form-control" id="inputAnnounceAfterLaps" />
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button"
+									data-toggle="popover"
+									data-content="Start announce only after completed certain amount of laps. This option is only for race. Global setting for all tracks/cars.">
+								<i class="glyphicon glyphicon-question-sign"></i>
+							</button>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- announce delay -->
+			<div class="form-group">
+				<label for="inputAnnounceDelay" class="col-sm-3 control-label">Announce Delay</label>
+				<div class="col-sm-9">
+					<div class="input-group">
+						<span class="input-group-addon">Seconds</span>
+						<input ng-model="settings.announceDelay" ng-change="saveSettings()" type="number" min="0" class="form-control" id="inputAnnounceDelay" />
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button"
+									data-toggle="popover"
+									data-content="Start announce after Start/Finish line with delay. 'Custom Marker' will override this option. Global setting for all tracks/cars.">
+								<i class="glyphicon glyphicon-question-sign"></i>
+							</button>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- announce keep speaking -->
+			<div class="form-group">
+				<label for="inputAnnounceKeepSpeaking" class="col-sm-3 control-label">Keep Speaking</label>
+				<div class="col-sm-9">
+					<div class="btn-group btn-group-justified">
+						<a type="button" class="btn btn-default" ng-class="{'active': !settings.announceKeepSpeaking}" ng-click="settings.announceKeepSpeaking = false; saveSettings()">Shut up if voice chat active</a>
+						<a type="button" class="btn btn-default" ng-class="{'active': settings.announceKeepSpeaking}" ng-click="settings.announceKeepSpeaking = true; saveSettings()">Keep speaking even if people talking</a>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+</div>

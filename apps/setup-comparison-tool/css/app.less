@@ -1,0 +1,139 @@
+// @import url(https://fonts.googleapis.com/css?family=Oxygen+Mono);
+@import url(https://fonts.googleapis.com/css?family=Inconsolata:400,700);
+
+@font-family-monospace: 'Oxygen Mono';
+@font-family-monospace: 'Inconsolata';
+
+body {
+	padding-top: 70px;
+}
+
+input,
+button {
+	outline: none !important;
+}
+
+// MARKDOWN
+
+xmp {
+	display: none;
+}
+
+.toolbar {
+	text-align: center;
+
+	&.affix-top {
+		position: absolute;
+		top: 70px;
+		width: 100%;
+	}
+	&.affix {
+		top: 51px;
+		width: 100%;
+		padding: 12px 0;
+		background: white;
+		border-bottom: 1px solid #E7E7E7;
+		z-index: 1;
+	}
+}
+
+// 	     _______. _______ .___________. __    __  .______     _______.
+// 	    /       ||   ____||           ||  |  |  | |   _  \   /       |
+// 	   |   (----`|  |__   `---|  |----`|  |  |  | |  |_)  | |   (----`
+// 	    \   \    |   __|      |  |     |  |  |  | |   ___/   \   \
+// 	.----)   |   |  |____     |  |     |  `--'  | |  |   .----)   |
+// 	|_______/    |_______|    |__|      \______/  | _|   |_______/
+//
+
+.setups {
+	display: flex;
+	margin: 50px 0 100px;
+	cursor: default;
+
+	> .setup {
+
+		&:nth-child(even) {
+			background: fade(black, 5%);
+		}
+
+		&:first-child {
+			margin-left: auto;
+		}
+		&:last-child {
+			margin-right: auto;
+		}
+
+		&:not(:first-child) > .group > .group-key > tr > th > .btn-group {
+			padding-bottom: 3px;
+			.glyphicon {
+				top: 2px;
+			}
+		}
+
+		> .group {
+			width: 100%;
+
+			&:not(:first-child) {
+				padding-top: 12px;
+			}
+
+			> .group-key {
+				background: #E7E7E7;
+				font-size: 24px;
+				font-weight: bold;
+				> tr > th {
+					text-align: center;
+
+					div[contenteditable=true] {
+						padding: 0 6px;
+					}
+				}
+			}
+
+			> .section {
+				padding-top: 6px;
+
+				> .section-key {
+					font-size: 24px;
+					font-size: 20px;
+					> th {
+						padding-left: 6px;
+					}
+				}
+
+				> .parameter {
+					font-size: 16px;
+
+					&.hover {
+						background: #AEF;
+					}
+
+					> .key {
+						font-family: @font-family-monospace;
+						font-weight: normal;
+						width: 1px;
+						text-align: right;
+						padding-left: 6px;
+						&::after {
+							content: ':';
+						}
+					}
+
+					> .value {
+						font-family: @font-family-monospace;
+						font-weight: bold;
+						padding: 0 6px;
+						white-space: nowrap;
+						&.changed {
+							background: #F99;
+						}
+					}
+					&.hover > .value.changed {
+						color: white;
+						background: #F66;
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,343 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Mihail Latyshov" />
+	<title>Debug &middot; iRacing Browser Apps</title>
+	<!-- jquery -->
+	<script src="/libs/jquery.min.js"></script>
+	<!-- bootstrap -->
+	<link rel="stylesheet" type="text/css" href="/libs/bootstrap/css/bootstrap.min.css">
+	<!-- angularjs -->
+	<script src="/libs/angular/angular.min.js"></script>
+	<!-- json editor -->
+	<link rel="stylesheet" type="text/css" href="css/jsoneditor.min.css">
+	<script src="js/jsoneditor-minimalist.min.js"></script>
+	<!-- less -->
+	<link rel="stylesheet/less" type="text/css" href="css/app.less" />
+	<script src="/libs/less.min.js"></script>
+	<!-- coffeescript -->
+	<script src="/libs/coffee-script.js"></script>
+	<script src="/libs/ir.coffee" type="text/coffeescript"></script>
+	<script src="js/app.coffee" type="text/coffeescript"></script>
+</head>
+<body ng-cloak>
+
+	<div ng-controller="ViewersCtrl" class="viewers">
+
+		<button ng-click="refresh()" class="btn btn-primary btn-block btn-refresh">
+			<span class="glyphicon glyphicon-repeat"></span>
+			Refresh
+		</button>
+
+		<div class="json-viewers">
+			<div id="yaml" class="json-viewer"></div>
+			<div id="telemetry" class="json-viewer"></div>
+		</div>
+
+	</div>
+
+	<div ng-controller="CommandsCtrl" class="commands">
+
+		<label for="command-select">iRacing Commands</label>
+		<select id="command-select" class="form-control">
+			<option>cam_switch_pos</option>
+			<option>cam_switch_num</option>
+			<option>cam_set_state</option>
+			<option>replay_set_play_speed</option>
+			<option>replay_set_play_position</option>
+			<option>replay_search</option>
+			<option>replay_set_state</option>
+			<option>reload_all_textures</option>
+			<option>reload_texture</option>
+			<option>chat_command</option>
+			<option>chat_command_macro</option>
+			<option>pit_command</option>
+			<option>telem_command</option>
+			<option>ffb_command</option>
+			<option>replay_search_session_time</option>
+		</select>
+
+		<div id="commands">
+
+			<!-- cam_switch_pos -->
+			<div id="cam_switch_pos">
+				<form>
+					<div class="form-group">
+						<label for="cam_switch_pos0">Position</label>
+						<input ng-model="cam_switch_pos[0]" type="number" class="form-control" id="cam_switch_pos0" min="-3" max="64">
+					</div>
+					<div class="form-group">
+						<label for="cam_switch_pos1">Group</label>
+						<input ng-model="cam_switch_pos[1]" type="number" class="form-control" id="cam_switch_pos1" min="0">
+					</div>
+					<div class="form-group">
+						<label for="cam_switch_pos2">Camera</label>
+						<input ng-model="cam_switch_pos[2]" type="number" class="form-control" id="cam_switch_pos2" min="0">
+					</div>
+					<p><code app-send-command="cam_switch_pos"></code></p>
+					<button ng-click="send('cam_switch_pos')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- cam_switch_num -->
+			<div id="cam_switch_num">
+				<form>
+					<div class="form-group">
+						<label for="cam_switch_num0">Car Number</label>
+						<div class="input-group">
+							<span class="input-group-addon">#</span>
+							<input ng-model="cam_switch_num[0]" type="text" class="form-control" id="cam_switch_num0">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="cam_switch_num1">Group</label>
+						<input ng-model="cam_switch_num[1]" type="number" class="form-control" id="cam_switch_num1" min="0">
+					</div>
+					<div class="form-group">
+						<label for="cam_switch_num2">Camera</label>
+						<input ng-model="cam_switch_num[2]" type="number" class="form-control" id="cam_switch_num2" min="0">
+					</div>
+					<p><code app-send-command="cam_switch_num"></code></p>
+					<button ng-click="send('cam_switch_num')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- cam_set_state -->
+			<div id="cam_set_state">
+				<form>
+					<div class="form-group">
+						<label for="cam_set_state0">Camera State</label>
+						<input ng-model="cam_set_state[0]" type="number" class="form-control" id="cam_set_state0" min="0">
+					</div>
+					<span class="help-block">
+						<code>0x004</code> Cam tool active<br>
+						<code>0x008</code> UI hidden<br>
+						<code>0x010</code> Use auto shot selection<br>
+						<code>0x020</code> Use temporary edits<br>
+						<code>0x040</code> Use key acceleration<br>
+						<code>0x080</code> Use key10x acceleration<br>
+						<code>0x100</code> Use mouse aim mode<br>
+						Combine them by <em>or</em> operator (eg: <code>0x4 | 0x8 | 0x10</code>)
+					</span>
+					<p><code app-send-command="cam_set_state"></code></p>
+					<button ng-click="send('cam_set_state')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- replay_set_play_speed -->
+			<div id="replay_set_play_speed">
+				<form>
+					<div class="form-group">
+						<label for="replay_set_play_speed0">Speed</label>
+						<input ng-model="replay_set_play_speed[0]" type="number" class="form-control" id="replay_set_play_speed0" min="-16" max="16">
+					</div>
+					<div class="form-group">
+						<div class="checkbox">
+							<label>
+								<input ng-model="replay_set_play_speed[1]" type="checkbox">
+								Slow Motion
+							</label>
+						</div>
+					</div>
+					<p><code app-send-command="replay_set_play_speed"></code></p>
+					<button ng-click="send('replay_set_play_speed')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- replay_set_play_position -->
+			<div id="replay_set_play_position">
+				<form>
+					<div class="form-group">
+						<label for="replay_set_play_position0">Replay Position Mode</label>
+						<input ng-model="replay_set_play_position[0]" type="number" class="form-control" id="replay_set_play_position0" min="0" max="2">
+					</div>
+					<span class="help-block">
+						<code>0</code> Begin<br>
+						<code>1</code> Current<br>
+						<code>2</code> End
+					</span>
+					<div class="form-group">
+						<label for="replay_set_play_position1">Frame Number</label>
+						<input ng-model="replay_set_play_position[1]" type="number" class="form-control" id="replay_set_play_position1" min="0">
+					</div>
+					<p><code app-send-command="replay_set_play_position"></code></p>
+					<button ng-click="send('replay_set_play_position')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- replay_search -->
+			<div id="replay_search">
+				<form>
+					<div class="form-group">
+						<label for="replay_search0">Search Mode</label>
+						<input ng-model="replay_search[0]" type="number" class="form-control" id="replay_search0" min="0" max="9">
+					</div>
+					<span class="help-block">
+						<code>0</code> To start<br>
+						<code>1</code> To end<br>
+						<code>2</code> Prev session<br>
+						<code>3</code> Next session<br>
+						<code>4</code> Prev lap<br>
+						<code>5</code> Next lap<br>
+						<code>6</code> Prev frame<br>
+						<code>7</code> Next frame<br>
+						<code>8</code> Prev incident<br>
+						<code>9</code> Next incident
+					</span>
+					<p><code app-send-command="replay_search"></code></p>
+					<button ng-click="send('replay_search')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- replay_set_state -->
+			<div id="replay_set_state">
+				<form>
+					<div class="form-group">
+						<label for="replay_set_state0">State Mode</label>
+						<input ng-model="replay_set_state[0]" type="number" class="form-control" id="replay_set_state0" min="0" max="0">
+					</div>
+					<span class="help-block">
+						<code>0</code> Erase tape
+					</span>
+					<p><code app-send-command="replay_set_state"></code></p>
+					<button ng-click="send('replay_set_state')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- reload_all_textures -->
+			<div id="reload_all_textures">
+				<form>
+					<p><code app-send-command="reload_all_textures"></code></p>
+					<button ng-click="send('reload_all_textures')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- reload_texture -->
+			<div id="reload_texture">
+				<form>
+					<div class="form-group">
+						<label for="reload_texture0">Car Index</label>
+						<input ng-model="reload_texture[0]" type="number" class="form-control" id="reload_texture0" min="0" max="63">
+					</div>
+					<p><code app-send-command="reload_texture"></code></p>
+					<button ng-click="send('reload_texture')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- chat_command -->
+			<div id="chat_command">
+				<form>
+					<div class="form-group">
+						<label for="chat_command0">Chat Command Mode</label>
+						<input ng-model="chat_command[0]" type="number" class="form-control" id="chat_command0" min="1" max="3">
+					</div>
+					<span class="help-block">
+						<code>1</code> Begin chat<br>
+						<code>2</code> Reply<br>
+						<code>3</code> Cancel
+					</span>
+					<p><code app-send-command="chat_command"></code></p>
+					<button ng-click="send('chat_command')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- chat_command_macro -->
+			<div id="chat_command_macro">
+				<form>
+					<div class="form-group">
+						<label for="chat_command_macro0">Macro Number</label>
+						<input ng-model="chat_command_macro[0]" type="number" class="form-control" id="chat_command_macro0" min="0" max="14">
+					</div>
+					<p><code app-send-command="chat_command_macro"></code></p>
+					<button ng-click="send('chat_command_macro')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- pit_command -->
+			<div id="pit_command">
+				<form>
+					<div class="form-group">
+						<label for="pit_command0">Pit Command Mode</label>
+						<input ng-model="pit_command[0]" type="number" class="form-control" id="pit_command0" min="0" max="8">
+					</div>
+					<span class="help-block">
+						<code>0</code> Clear<br>
+						<code>1</code> Windshield<br>
+						<code>2</code> Fuel<br>
+						<code>3</code> LF<br>
+						<code>4</code> RF<br>
+						<code>5</code> LR<br>
+						<code>6</code> RR<br>
+						<code>7</code> ClearTires<br>
+						<code>8</code> FR
+					</span>
+					<div class="form-group">
+						<label for="pit_command1">Liters for fuel or KPa for wheels</label>
+						<input ng-model="pit_command[1]" type="number" class="form-control" id="pit_command1" min="0">
+					</div>
+					<p><code app-send-command="pit_command"></code></p>
+					<button ng-click="send('pit_command')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- telem_command -->
+			<div id="telem_command">
+				<form>
+					<div class="form-group">
+						<label for="telem_command0">Telemetry Command Mode</label>
+						<input ng-model="telem_command[0]" type="number" class="form-control" id="telem_command0" min="0" max="2">
+					</div>
+					<span class="help-block">
+						<code>0</code> Stop<br>
+						<code>1</code> Start<br>
+						<code>2</code> Restart<br>
+					</span>
+					<p><code app-send-command="telem_command"></code></p>
+					<button ng-click="send('telem_command')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- ffb_command -->
+			<div id="ffb_command">
+				<form>
+					<div class="form-group">
+						<label for="ffb_command0">FFB Command Mode</label>
+						<input ng-model="ffb_command[0]" type="number" class="form-control" id="ffb_command0" min="0" max="0">
+					</div>
+					<span class="help-block">
+						<code>0</code> Max Force<br>
+					</span>
+					<div class="form-group">
+						<label for="ffb_command1">Set the maximum force when mapping steering torque force to direct input units (float in Nm)</label>
+						<input ng-model="ffb_command[1]" type="number" class="form-control" id="ffb_command1" step=".001">
+					</div>
+					<p><code app-send-command="ffb_command"></code></p>
+					<button ng-click="send('ffb_command')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+
+			<!-- replay_search_session_time -->
+			<div id="replay_search_session_time">
+				<form>
+					<div class="form-group">
+						<label for="replay_search_session_time0">Session Num</label>
+						<input ng-model="replay_search_session_time[0]" type="number" class="form-control" id="replay_search_session_time0" min="0" max="2">
+					</div>
+					<div class="form-group">
+						<label for="replay_search_session_time1">Session Time, ms</label>
+						<input ng-model="replay_search_session_time[1]" type="number" class="form-control" id="replay_search_session_time1" min="0">
+					</div>
+					<p><code app-send-command="replay_search_session_time"></code></p>
+					<button ng-click="send('replay_search_session_time')" ng-disabled="!connected" type="submit" class="btn btn-default">Send</button>
+				</form>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>
+

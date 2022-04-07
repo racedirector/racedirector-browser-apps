@@ -1,0 +1,45 @@
+<div class="row">
+
+	<div class="col-md-12">
+
+		<xmp app-markdown>
+		## About
+
+		Setup Cover allows you to cover your setup screen while streaming.
+
+		## Install
+
+		1. Download and unzip [iRacingBrowserApps](/downloads/iRacingBrowserApps.zip)
+		2. Run `server.exe`
+		3. Install [OBS Studio](https://obsproject.com/download) (use **Full-Installer** with Browser plugin)
+
+		## Setup
+
+		1. Add **BrowserSource** layer in OBS Studio
+		2. Set **URL** to `https://ir-apps.kutu.ru/setup-cover/overlay.html`
+		3. Set **Width x Height** to your garage screen dimensions (for 100% UI scale = 984&nbsp;x&nbsp;779)
+		4. Set **FPS** to 20
+		5. For 100% UI scale, **RightClick** on layer => **Transform** => **Edit Transform** and set **Position** to 469&nbsp;x&nbsp;97
+		6. You can change beautiful cat image to your own via CSS:
+		   ```
+		   .cover {
+		   	background-image: url('http://url-to-image.jpg');
+		   }
+		   ```
+
+		## Usage
+
+		1. Before going to **Garage**, press and hold **M** button on your keyboard
+		2. Click **Garage**
+		3. Release **M** button
+
+		This action needed, if you don't wanna show tyres/aero (first screen) of setup, because iRacing has some delay on reporting when you go into garage. But even if you miss pressing **M** button, overlay will appear within half a second.
+
+		__If you crashed in a race or racing in a team event, opening garage during race session will NOT popup cover image.__
+
+		For 2 PC streamers, use URL like this `http://ir-apps.kutu.ru/setup-cover/overlay.html?server=192.168.1.1:8182`
+		</xmp>
+
+	</div>
+
+</div>

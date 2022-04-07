@@ -1,0 +1,107 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+
+			<xmp app-markdown data-table-class="table table-condensed table-bordered table-hover">
+
+			### `IRacing` class (Web client side)
+
+			This is a helper class, that connect to server application and return data to your application. It also can send commands to iRacing.
+
+			`new IRacing(requestParams, requestParamsOnce, fps, server, readIbt)`
+
+			| Parameter | Default | Description |
+			|-|-|-|
+			| `requestParams` | `[]` | This parameters server will send every time |
+			| `requestParamsOnce` | `[]` | This parameters server will send only once (useful for `QualifyResultsInfo`, `SplitTimeInfo` and `WeekendInfo` because it never changed) |
+			| `fps` | `1` | How often server will send data |
+			| `server` | `127.0.0.1:8182` | Server address and port |
+			| `readIbt` | `false` | Should server start to read ibt files |
+
+			`IRacing` object:
+
+			| Name | Type | Description |
+			|-|-|-|
+			| `onConnect` | function | Server connected to iRacing |
+			| `onDiconnect` | function | Server diconnected from iRacing |
+			| `onWSConnect` | function | Connected to server application |
+			| `onWSDisconnect` | function | Diconnected from server application |
+			| `onUpdate(keys)` | function | Client receive the data.<br>`keys` - what parameters recieved |
+			| `data` | Object | All data from server |
+			| `sendCommand(command, args...)` | method | Send command to iRacing through server |
+
+			### `server.exe` (Command line side)
+
+			Server has next parameters to start with:
+
+			| Parameter | Description |
+			|-|-|
+			| `-h`, `--help` | Show help |
+			| `-p`, `--port` | Set port to start on, *default is 8182* |
+			| `--test dump.bin` | Use `dump.bin` as iRacing memory map file, useful for testing. |
+			| `--dump dump.bin` | Dump iRacing memory map file to `dump.bin` |
+
+			### Debug Application
+
+			[Here](/debug/) you can see what YAML and telemtery data available right now, and what commands you can send to iRacing.
+
+			### Hello World
+
+			We will get `Speed` telemetry data from iRacing and show it on the html page.
+
+			You can check this application [here](/hello-world/).
+
+			1. Create new folder in `apps` directory. It will be your new application.
+
+			2. Create `index.html`:
+			   ```html
+			   <!doctype html>
+			   <html>
+			   <head>
+			       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+			       <meta charset="utf-8" />
+			       <title>Hello World</title>
+			       <!-- angular -->
+			       <script src="/libs/angular/angular.min.js"></script>
+			       <!-- coffee -->
+			       <script src="/libs/coffee-script.js"></script>
+			       <script src="/libs/ir.coffee" type="text/coffeescript"></script>
+			       <script src="app.coffee" type="text/coffeescript"></script>
+			   </head>
+			   <body ng-controller="MainCtrl">
+
+			       <h1 ng-bind="ir.Speed"></h1>
+
+			   </body>
+			   </html>
+			   ```
+
+			3. Create `app.coffee`:
+			   ```coffeescript
+			   app = angular.module 'hello-world-app', []
+
+			   app.service 'iRService', ($rootScope) ->
+			       ir = new IRacing ['Speed'], [], 10
+
+			       ir.onConnect = ->
+			           console.log 'connected'
+
+			       ir.onDisconnect = ->
+			           console.log 'disconnected'
+
+			       ir.onUpdate = (keys) ->
+			           $rootScope.$apply()
+
+			       return ir
+
+			   app.controller 'MainCtrl', ($scope, iRService) ->
+			       $scope.ir = iRService.data
+
+			   angular.bootstrap document, [app.name]
+			   ```
+
+			</xmp>
+
+		</div>
+	</div>
+</div>

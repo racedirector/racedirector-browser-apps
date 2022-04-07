@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Mihail Latyshov" />
+	<title>Stream Monitor</title>
+	<!-- jquery -->
+	<script src="/libs/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/libs/jquery-ui/jquery-ui.min.css">
+	<script src="/libs/jquery-ui/jquery-ui.min.js"></script>
+	<!-- bootstrap -->
+	<link rel="stylesheet" type="text/css" href="/libs/bootstrap/css/bootstrap.min.css">
+	<script src="/libs/bootstrap/js/bootstrap.min.js"></script>
+	<!-- less -->
+	<link rel="stylesheet/less" type="text/css" href="css/monitor.less" />
+	<script src="/libs/less.min.js"></script>
+    <!-- sockjs -->
+    <script src="/libs/sockjs.min.js"></script>
+	<!-- event source -->
+	<script src="js/eventsource.min.js"></script>
+	<!-- store.js -->
+	<script src="/libs/store.min.js"></script>
+	<!-- selectize -->
+	<link rel="stylesheet" type="text/css" href="/libs/selectize/css/selectize.css">
+	<link rel="stylesheet" type="text/css" href="/libs/selectize/css/selectize.bootstrap3.css">
+	<script src="/libs/selectize/js/selectize.min.js"></script>
+	<!-- twitter fetcher -->
+	<script src="js/twitterFetcher_min.js"></script>
+	<!-- coffee -->
+	<script src="/libs/coffee-script.js"></script>
+	<script src="/libs/twitch-chat.coffee" type="text/coffeescript"></script>
+	<script src="/libs/twitch-follower.coffee" type="text/coffeescript"></script>
+	<script src="js/monitor.coffee" type="text/coffeescript"></script>
+</head>
+<body>
+
+<div class="twitch-row">
+	<div class="status-game">
+		<div class="col-xs-8">
+			<div class="input-group">
+				<div class="input-group-addon">Title</div>
+				<input id="twitch-status" type="text" class="form-control" tabindex="1">
+			</div>
+		</div>
+		<div class="col-xs-4">
+			<select id="twitch-game" class="form-control" placeholder="Game" tabindex="2"></select>
+		</div>
+	</div>
+
+	<div class="tweet-counters">
+		<a id="update-status-btn" class="btn btn-default" disabled="disabled" tabindex="3">Update Title</a>
+		<a id="tweet-status-btn" class="btn btn-default" disabled="disabled" tabindex="4">Tweet</a>
+
+		<div id="ad-btn" class="btn-group hidden">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				Ads
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-right">
+				<li><a href="#">30 seconds</a></li>
+				<li><a href="#">1 minute</a></li>
+				<li><a href="#">1m30s</a></li>
+				<li><a href="#">2m</a></li>
+				<li><a href="#">2m30s</a></li>
+				<li><a href="#">3m</a></li>
+			</ul>
+		</div>
+
+		<a id="fuel-calc-btn" class="btn btn-default" tabindex="5">
+			<img src="img/fuel-level.png" height="18">
+		</a>
+
+		<span class="counters">
+			<span>
+				<i class="glyphicon glyphicon-eye-open"></i>
+				<span id="viewers">0</span>
+			</span>
+			<span>
+				<i class="glyphicon glyphicon-heart"></i>
+				<span id="followers">0</span>
+			</span>
+		</span>
+	</div>
+</div>
+
+<div id="fuel-calc" class="modal-fuel-calc-content">
+	<div class="modal-fuel-calc-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	</div>
+</div>
+
+<div id="chat-wrap">
+	<div id="chat-box"></div>
+</div>
+
+<div id="fold-but"></div>
+
+<iframe id="chat-embed" frameborder="0"></iframe>
+
+</body>
+</html>

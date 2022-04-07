@@ -1,0 +1,334 @@
+<div class="row settings">
+	<div class="col-md-12">
+		<form class="form-horizontal">
+
+			<!-- url -->
+			<div class="input-group input-url">
+				<span class="input-group-addon">Browser URL</span>
+				<input ng-model="url" ng-change="changeURL()" type="url" class="form-control">
+			</div>
+
+			<!-- channel -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Main</h3>
+				</div>
+				<div class="panel-body">
+					<!-- channel -->
+					<div class="form-group">
+						<label for="inputChannel" class="col-sm-3 control-label">Channel Name</label>
+						<div class="col-sm-3 has-feedback">
+							<input twitch-chat-channel="settings.channel_id" ng-model="settings.channel" ng-model-options="{debounce: 500}" ng-change="saveSettings" type="text" class="form-control input-width-200" id="inputChannel" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- preview -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Preview</h3>
+				</div>
+				<div class="panel-body chat-preview">
+					<div id="chat-wrap">
+						<div id="chat-box"></div>
+					</div>
+				</div>
+				<div class="panel-footer">
+					<p>Keep in mind, that if your video source is 1080p and downscaled to 720p, then it will look a little bit smaller.</p>
+					<span class="text-muted">In preview: faked chat from <a href="http://twitch.tv/lirik" target="_blank">Lirik's</a> stream.</span>
+				</div>
+			</div>
+
+			<!-- customizations -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Customizations</h3>
+				</div>
+				<div class="panel-body">
+
+					<!-- background -->
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Background</label>
+						<div class="col-sm-9">
+							<div class="input-group input-bg-with-opacity">
+								<span class="input-group-addon">Color</span>
+								<input ng-model="settings.bgColor" ng-change="saveSettings()" type="color" class="form-control">
+								<span class="input-group-addon">Opacity</span>
+								<input ng-model="settings.bgOpacity" ng-change="saveSettings()" type="range" class="form-control" min="0" max="100" step="5" />
+								<span class="input-group-addon"><span ng-bind="settings.bgOpacity"></span>%</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- border radius -->
+					<div ng-if="settings.bgOpacity">
+						<div class="form-group">
+							<label for="inputBorderRadiusEach" class="col-sm-3 control-label">Border Radius</label>
+							<div class="col-sm-9">
+								<div class="checkbox">
+									<label>
+										<input ng-model="settings.borderRadiusEach" ng-change="saveSettings()" type="checkbox" id="inputBorderRadiusEach">
+										Control each corner. <em>(Useful, if you want to stick chat to a border)</em>
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-offset-3 col-sm-4">
+								<div class="input-group input-range-with-value">
+									<input ng-model="settings.borderRadius1" ng-change="saveSettings()" type="range" class="form-control" min="0" max="20" />
+									<span class="input-group-addon"><span ng-bind="settings.borderRadius1"></span>px</span>
+								</div>
+							</div>
+							<div class="col-sm-4" ng-if="settings.borderRadiusEach">
+								<div class="input-group input-range-with-value">
+									<span class="input-group-addon"><span ng-bind="settings.borderRadius2"></span>px</span>
+									<input ng-model="settings.borderRadius2" ng-change="saveSettings()" type="range" class="form-control" min="0" max="20" />
+								</div>
+							</div>
+						</div>
+						<br ng-if="settings.borderRadiusEach">
+						<div class="row" ng-if="settings.borderRadiusEach">
+							<div class="col-sm-offset-3 col-sm-4">
+								<div class="input-group input-range-with-value">
+									<input ng-model="settings.borderRadius4" ng-change="saveSettings()" type="range" class="form-control" min="0" max="20" />
+									<span class="input-group-addon"><span ng-bind="settings.borderRadius4"></span>px</span>
+								</div>
+							</div>
+							<div class="col-sm-4" ng-if="settings.borderRadiusEach">
+								<div class="input-group input-range-with-value">
+									<span class="input-group-addon"><span ng-bind="settings.borderRadius3"></span>px</span>
+									<input ng-model="settings.borderRadius3" ng-change="saveSettings()" type="range" class="form-control" min="0" max="20" />
+								</div>
+							</div>
+						</div>
+						<br>
+					</div>
+
+					<!-- bold text -->
+					<div class="form-group">
+						<label for="inputBoldText" class="col-sm-3 control-label">Bold Text</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.boldText" ng-change="saveSettings()" type="checkbox" id="inputBoldText">
+									Bold text for messages. <em>(Useful, if you downscale from 1080p to 720p)</em>
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- text shadow -->
+					<div class="form-group">
+						<label for="inputTextShadow" class="col-sm-3 control-label">Text Shadow</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.textShadow" ng-change="saveSettings()" type="checkbox" id="inputTextShadow">
+									Shadow for text . <em>(Useful for transparent background)</em>
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- zoom -->
+					<div class="form-group">
+						<label for="inputZoom" class="col-sm-3 control-label">Zoom</label>
+						<div class="col-sm-4">
+							<div class="input-group input-range-with-value">
+								<input ng-model="settings.zoom" ng-change="saveSettings()" type="range" id="inputZoom" class="form-control" min="50" max="200" step="5" />
+								<span class="input-group-addon"><span ng-bind="settings.zoom"></span>%</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- margin -->
+					<div ng-if="settings.bgOpacity" class="form-group">
+						<label for="inputMargin" class="col-sm-3 control-label">Margin</label>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<span class="input-group-addon">T/B</span>
+								<input ng-model="settings.margin1" ng-change="saveSettings()" type="range" id="inputMargin" class="form-control" min="2" max="10" />
+								<span class="input-group-addon"><span ng-bind="settings.margin1"></span>px</span>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<span class="input-group-addon"><span ng-bind="settings.margin2"></span>px</span>
+								<input ng-model="settings.margin2" ng-change="saveSettings()" type="range" class="form-control" min="2" max="10" />
+								<span class="input-group-addon">L/R</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- show emoticons -->
+					<div class="form-group">
+						<label for="inputShowEmoticons" class="col-sm-3 control-label">Emoticons</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.showEmoticons" ng-change="saveSettings()" type="checkbox" id="inputShowEmoticons">
+									Show emoticons in chat.
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- show badges -->
+					<div class="form-group">
+						<label for="inputShowBadges" class="col-sm-3 control-label">Badges</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.showBadges" ng-change="saveSettings()" type="checkbox" id="inputShowBadges">
+									Show user badges. <em>(mod, turbo, sub, etc...)</em>
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- bits -->
+					<div class="form-group">
+						<label for="inputShowBits" class="col-sm-3 control-label">Cheers</label>
+						<div class="col-sm-3">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.showBits" ng-change="saveSettings()" type="checkbox" id="inputShowBits">
+									Show cheers icons
+								</label>
+							</div>
+						</div>
+						<div ng-if="settings.showBits" class="col-sm-2">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.bitsType" ng-change="saveSettings()" type="checkbox">
+									{{ settings.bitsType ? 'Animated' : 'Static' }}
+								</label>
+							</div>
+						</div>
+						<div ng-if="settings.showBits" class="col-sm-4">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.bitsTheme" ng-change="saveSettings()" type="checkbox">
+									<span ng-if="settings.bitsTheme">Dark <em>for dark backgrounds.</em></span>
+									<span ng-if="!settings.bitsTheme">Light <em>for light backgrounds.</em></span>
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- filter betbot -->
+					<div ng-if="!isDefaultHost" class="form-group">
+						<label for="inputFilterBetBot" class="col-sm-3 control-label">Filter BetBot</label>
+						<div class="col-sm-4">
+							<input ng-model="settings.filterBetBot" ng-change="saveSettings()" type="text" class="form-control" id="inputFilterBetBot" placeholder="BetBot Username" />
+						</div>
+						<div class="col-sm-5">
+							<span class="help-block">Filter most messages related to BetBot.</span>
+						</div>
+					</div>
+
+					<!-- filter bots -->
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Filter Bots</label>
+						<div class="col-sm-5">
+							<selectize config="{create:true, options:['MooBot', 'NightBot']}" ng-model="settings.filterBots" ng-change="saveSettings()" type="text" class="form-control" placeholder="Usernames" /></selectize>
+						</div>
+					</div>
+
+					<!-- smooth scrolling -->
+					<div class="form-group">
+						<label for="inputSmoothScrolling" class="col-sm-3 control-label">Smooth Scrolling</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.smoothScrolling" ng-change="saveSettings()" type="checkbox" id="inputSmoothScrolling">
+									Scroll chat smoothly when new message shows.
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- strike out messages -->
+					<div class="form-group">
+						<label for="inputStrikeOutMessages" class="col-sm-3 control-label">Strike Out Messages</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.strikeOutMessages" ng-change="saveSettings()" type="checkbox" id="inputStrikeOutMessages">
+									Only strike out "<s>deleted</s>" messages (not remove).
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- highlight messages -->
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Highlight Words</label>
+						<div class="col-sm-9">
+							<selectize config="{create:true, persist:false}" ng-model="settings.highlightWords" ng-change="saveSettings()" type="text" class="form-control" placeholder="Words to highlight  " /></selectize>
+						</div>
+					</div>
+
+					<!-- reversed messages -->
+					<div class="form-group">
+						<label for="inputReversedMessages" class="col-sm-3 control-label">Reversed Messages</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.reversedMessages" ng-change="saveSettings()" type="checkbox" id="inputReversedMessages">
+									Messages will appear from top.
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- hide message after -->
+					<div class="form-group">
+						<label for="inputHideMessageAfter" class="col-sm-3 control-label">Hide Message After</label>
+						<div class="col-sm-3">
+							<div class="input-group">
+								<input ng-model="settings.hideMessageAfter" ng-change="saveSettings()" type="number" id="inputHideMessageAfter" class="form-control" min="0" step="5" />
+								<span class="input-group-addon">Secs</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- wc drivers irating badge -->
+					<div class="form-group">
+						<label for="inputIRatings" class="col-sm-3 control-label">iRating Badge</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.showIRatings" ng-change="saveSettings()" type="checkbox" id="inputIRatings">
+									Show WC drivers iRating badge.
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- system -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">System</h3>
+				</div>
+				<div class="panel-body">
+					<!-- host -->
+					<div class="form-group">
+						<label for="inputHost" class="col-sm-3 control-label">Server</label>
+						<div class="col-sm-3">
+							<input ng-model="settings.host" ng-change="saveSettings()" type="text" class="form-control input-width-200" id="inputHost" placeholder="127.0.0.1:8184" />
+						</div>
+						<div class="col-sm-6">
+							<span class="help-block">Chat.exe server address and port. Use it if you want to see chat on your smartphone, tablet, or another PC.</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+</div>

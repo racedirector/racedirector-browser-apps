@@ -1,0 +1,181 @@
+@import (inline) "/libs/bootstrap/css/bootstrap.min.css";
+
+@bootstrap-path: "/libs/bootstrap/less/";
+@import "@{bootstrap-path}variables.less";
+@icon-font-path: "/libs/bootstrap/fonts/";
+@import "@{bootstrap-path}glyphicons.less";
+@import "@{bootstrap-path}mixins/size.less";
+
+@footer-height: 100px;
+
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	margin-bottom: @footer-height;
+
+	> div {
+		padding: 51px 0px 20px;
+	}
+}
+
+@media (min-width: @screen-md) {
+	.container {
+		max-width: @screen-md;
+	}
+}
+
+input,
+button {
+	outline: none !important;
+}
+
+// NAVBAR UNCOLLAPSE FIX
+
+@media (max-width: @grid-float-breakpoint-max) {
+	.navbar {
+		.navbar-header {
+			float: left;
+		}
+		.navbar-nav {
+			margin: 0;
+			margin-right: -15px;
+			> li {
+				float: left;
+				> a {
+					padding-top: 15px;
+					padding-bottom: 15px;
+				}
+			}
+		}
+		.navbar-right {
+			float: right !important;
+		}
+	}
+}
+
+.navbar-brand {
+	opacity: 0.65;
+	&:hover {
+		opacity: 1;
+	}
+	> img {
+		height: 26px;
+		margin-top: -2px;
+	}
+}
+
+// TWITTER NAV BUTTON
+
+.twitter-logo {
+	> svg {
+		width: 18px;
+		height: 18px;
+		margin-bottom: -3px;
+		.cls-2 { fill: #777; }
+	}
+	&:hover {
+		> svg {
+			.cls-2 { fill: #333; }
+		}
+	}
+}
+
+// BRAND
+
+main {
+	@bg-color: #333;
+	@bg-line-fade-1: fade(white, 6%);
+	@bg-line-fade-2: fade(white, 3%);
+	color: white;
+	background-color: @bg-color;
+	background-image: linear-gradient(@bg-line-fade-1 1px, transparent 1px),
+		linear-gradient(90deg, @bg-line-fade-1 1px, transparent 1px),
+		linear-gradient(@bg-line-fade-2 1px, transparent 1px),
+		linear-gradient(90deg, @bg-line-fade-2 1px, transparent 1px);
+	background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+	background-position-x: 50%;
+	padding: 122px 0 29px;
+	text-align: center;
+
+	.title {
+		font-size: 41px;
+		font-weight: bold;
+		> span {
+			border: 2px solid white;
+			border-radius: 20px;
+			padding: 25px 31px 25px 30px;
+			margin-left: 1px;
+		}
+	}
+	.desc {
+		font-size: 16px;
+		padding-top: 54px;
+	}
+	.download {
+		padding-top: 44px;
+	}
+	.btn-outline-inverse {
+		color: white;
+		font-size: 19px;
+		border-color: #fff;
+		padding: 7px 28px 7px 27px;
+		margin-left: 1px;
+		&:hover {
+			color: #444;
+			background-color: #fff;
+		}
+	}
+
+	@media (max-width: @grid-float-breakpoint-max) {
+		padding: 54px 0 29px;
+
+		.title {
+			font-size: 24px;
+			> span {
+				border-radius: 10px;
+				padding: 14px 20px 14px 21px;
+			}
+		}
+		.desc {
+			font-size: 14px;
+			padding-top: 48px;
+		}
+		.download {
+			padding-top: 44px;
+		}
+		.btn-outline-inverse {
+			font-size: 18px;
+			padding: 8px 29px 7px 30px;
+		}
+	}
+}
+
+// MARKDOWN
+
+@import (inline) "/libs/highlight/styles/monokai_sublime.css";
+
+xmp {
+	display: none;
+}
+
+pre.hljs {
+	border: none;
+}
+
+// FOOTER
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: @footer-height;
+	background-color: #f8f8f8;
+	border-top: 1px solid #e7e7e7;
+
+	> .container {
+		padding-top: 20px;
+	}
+}

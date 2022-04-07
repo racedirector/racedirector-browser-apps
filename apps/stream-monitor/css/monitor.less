@@ -1,0 +1,320 @@
+html, body {
+	margin: 0;
+	height: 100%;
+	font-family: 'Segoe UI';
+}
+
+body {
+	display: flex;
+	flex-flow: column;
+	overflow: hidden;
+}
+
+a,
+input,
+button {
+	outline: none !important;
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+
+	&-track {
+		background: transparent;
+	}
+	&-thumb {
+		background: rgba(0, 0, 0, .5);
+		border-radius: 3px;
+	}
+}
+
+.twitch-row {
+	display: flex;
+	padding: 12px 0;
+	background: #eee;
+	border-bottom: 2px #999 solid;
+
+	.status-game {
+		flex: 1;
+
+		> div:nth-child(2) {
+			padding: 0;
+		}
+	}
+
+	.tweet-counters {
+		padding: 0 12px;
+
+		> #tweet-status-btn, #ad-btn, #fuel-calc-btn {
+			margin-left: 8px;
+		}
+
+		#fuel-calc-btn > img {
+			float: left;
+		}
+
+		.counters {
+			display: inline-block;
+			font-family: Consolas;
+			vertical-align: middle;
+			margin-left: 12px;
+
+			#viewers, #followers {
+				font-size: 19px;
+			}
+		}
+	}
+
+	.form-control.selectize-control {
+		height: 34px;
+
+		.game-thumbnail {
+			width: auto;
+			height: 48px;
+		}
+		.game-title {
+			font-size: 19px;
+			padding-left: 6px;
+			vertical-align: middle;
+		}
+	}
+}
+
+// selectize wordwrap fix
+.selectize-input {
+    padding: 7px 30px 0px 12px !important;
+	> .item {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: 100%;
+	}
+}
+
+#chat-wrap {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	position: relative;
+    background: white;
+	z-index: 1;
+	// firefox bug
+	min-width: 0;
+	min-height: 0;
+}
+
+#chat-box {
+	font-size: 16px;
+	font-family: Arial, sans-serif;
+	overflow: auto;
+	flex: 1;
+
+	> .chat-line {
+		line-height: 22px;
+		padding: 0 6px;
+		white-space: nowrap;
+		zoom: 1.2;
+
+		&:last-child {
+			padding-bottom: 4px;
+		}
+
+		&.notify {
+			color: white;
+			font-weight: bold;
+			background: lighten(#6441A5, 20%);
+		}
+
+		&.sub {
+			color: white;
+			font-weight: bold;
+			background: #6441A5;
+			padding-top: 6px;
+			padding-bottom: 6px;
+
+			+ .sub {
+			    margin-top: -8px;
+			}
+		}
+
+		> .irating-badge {
+			display: inline-block;
+			box-sizing: border-box;
+			font-family: Consolas, monospace;
+			font-size: 12px;
+			color: #E7E7E7;
+			height: 18px;
+			line-height: 15px;
+			vertical-align: middle;
+			padding: 0 2px;
+			margin-right: 3px;
+			margin-bottom: 3px;
+			border: 2px solid #ccc;
+			border-radius: 4px;
+			background-color: black;
+		}
+
+		> .tag {
+			display: inline-block;
+			height: 18px;
+			width: 18px;
+			margin-right: 3px;
+			margin-bottom: 3px;
+			vertical-align: middle;
+			background-repeat: no-repeat;
+		    background-size: 18px;
+		}
+
+		> .username {
+			font-weight: bold;
+		}
+
+		> .message {
+			white-space: normal;
+			word-wrap: break-word;
+
+			> .emoticon {
+				zoom: .5;
+				max-height: 28px * 2;
+				margin: -8px 0 -6px;
+				vertical-align: middle;
+			}
+
+			> .bits {
+				white-space: nowrap;
+
+				> img {
+					max-height: 28px;
+					margin: -8px 0 -5px;
+					vertical-align: middle;
+				}
+			}
+		}
+	}
+
+	> .follower {
+		color: black;
+		font-weight: bold;
+		background: lighten(#B9A3E3, 15%);
+	}
+
+	> .donation {
+		color: black;
+		font-weight: bold;
+		background: gold;
+		padding-top: 12px;
+		padding-bottom: 12px !important;
+	}
+
+	> .log {
+		color: #666;
+		font-weight: bold;
+		background: #eee;
+	}
+
+	> .highlight {
+		background: #fdd;
+	}
+
+	> .update {
+		font-weight: bold;
+		background: #A9F5E1;
+	}
+
+	> .ban {
+		font-weight: bold;
+		background: #F66;
+	}
+
+	> .twitter {
+		background: #e1e8ed;
+
+		> .message {
+			> .TweetAuthor > .TweetAuthor-link {
+				display: inline-flex;
+				align-items: center;
+
+				> .TweetAuthor-avatar > .Avatar {
+					width: 18px;
+					height: 18px;
+					border-radius: 2px;
+				}
+				> .TweetAuthor-name {
+					font-weight: bold;
+					padding-left: 6px;
+				}
+				> .TweetAuthor-screenName {
+					padding-left: 6px;
+				}
+			}
+
+			> .Emoji {
+			    height: 1.2em;
+			    padding: 0 .05em 0 .1em;
+			    vertical-align: -0.2em;
+			}
+		}
+	}
+}
+
+#fold-but {
+	display: none;
+	height: 14px;
+	font-size: 20px;
+	color: #999;
+	background: #ddd;
+	line-height: 9px;
+	text-align: center;
+	cursor: pointer;
+	position: relative;
+	z-index: 2;
+}
+
+#chat-embed {
+	position: relative;
+	display: none;
+	top: -60px;
+	width: 100%;
+	height: 171px;
+	margin-bottom: -111px;
+
+	&.open {
+		height: 70%;
+		top: 0;
+		margin-bottom: -16px;
+	}
+}
+
+#fuel-calc {
+	position: fixed;
+	width: 300px;
+	height: 450px;
+	z-index: 1050;
+	display: none;
+	overflow: hidden;
+	outline: 0;
+	background-color: #fff;
+	background-clip: padding-box;
+	border-radius: 6px;
+	box-shadow: 0 5px 15px rgba(0,0,0,.5);
+
+	transition: opacity .1s ease;
+	opacity: .7;
+	&:hover {
+		opacity: 1;
+	}
+
+	.modal-fuel-calc-header {
+		padding: 15px;
+		padding-right: 10px;
+		.close {
+			margin-top: -12px;
+		}
+	}
+
+	iframe {
+		width: 100%;
+		height: ~"calc(100% - 30px)";
+		border: none;
+	}
+}

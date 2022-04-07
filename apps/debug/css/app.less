@@ -1,0 +1,70 @@
+@bootstrap-path: "/libs/bootstrap/less/";
+@import "@{bootstrap-path}variables.less";
+@icon-font-path: "/libs/bootstrap/fonts/";
+@import "@{bootstrap-path}glyphicons.less";
+@import "@{bootstrap-path}mixins/size.less";
+@import "@{bootstrap-path}mixins/vendor-prefixes.less";
+
+@column-width: 400px;
+
+html,
+body {
+	width: @column-width * 3;
+	height: 100%;
+	margin: 0 auto;
+}
+
+button {
+	outline: none !important;
+}
+
+.jsoneditor .field,
+.jsoneditor .value,
+.jsoneditor td,
+.jsoneditor textarea,
+.jsoneditor th {
+	font-family: PragmataPro, monospace;
+}
+
+.viewers {
+	position: absolute;
+	top: 0;
+	bottom: 34px;
+	width: @column-width * 2;
+
+	> .btn-refresh {
+		width: 100%;
+		border-radius: 0;
+	}
+
+	> .json-viewers {
+		display: flex;
+		height: 100%;
+
+		> .json-viewer {
+			flex: 1;
+
+			> .jsoneditor {
+				border-top: none;
+				border-bottom: none;
+			}
+			&#yaml > .jsoneditor {
+				border-right: none;
+			}
+		}
+	}
+
+}
+
+.commands {
+	position: absolute;
+	top: 0;
+	width: @column-width;
+	margin-top: 1em;
+	margin-left: @column-width * 2;
+	padding-left: 2em;
+
+	> #commands {
+		margin-top: 2em;
+	}
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>W12 Stuff</title>
+	<meta name="author" content="Mihail Latyshov" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+	<style>html,body{height:100%}body{margin:0;display:flex;justify-content:center;align-items:center;font-family:'JetBrains Mono',monospace;font-size:3.5vw;background-color:rgba(0,0,0,0.9);color:#fff;overflow:hidden}body.hidden{display:none}body > div{display:flex;flex-direction:column;row-gap:1ch;padding:.5ch}body > div > div{display:flex;column-gap:3ch}body > div > div > header{width:5ch}body > div > div > div{display:flex;column-gap:.5ch}#battery{width:4ch;text-align:right}#battery.charging{color:#ebcf47}#battery.recharging{color:#47eb47}#drs{color:#4d4d4d}#drs.state-1 > :nth-child(1){color:#47eb47}#drs.state-2 > :nth-child(1){color:#47eb47}#drs.state-2 > :nth-child(2){color:#ebcf47}#drs.state-3 > :nth-child(1),#drs.state-3 > :nth-child(3){color:#47eb47}#limiter{color:#4d4d4d}#limiter.deactivated{color:#eb6347}#limiter.active{color:#47eb47}#deploy-mode{color:#4d4d4d}#deploy-mode.mode-0 > :nth-child(1){color:#47eb47}#deploy-mode.mode-1 > :nth-child(2){color:#47eb47}#deploy-mode.mode-2 > :nth-child(3){color:#47eb47}#deploy-mode.mode-3 > :nth-child(4){color:#47eb47}#deploy-mode.mode-4 > :nth-child(5){color:#47eb47}#engine-brake{width:2ch}#bb-magic{color:#4d4d4d}#bb-magic.active{color:#47eb47}#diff-entry,#diff-mid{width:2ch}</style>
+</head>
+<body>
+	<div>
+		<div>
+			<header></header>
+			<div>
+				<div>BAT</div>
+				<div id="battery">100%</div>
+			</div>
+			<div id="drs">
+				<div>DRS</div>
+				<div>Ready</div>
+				<div>Active</div>
+			</div>
+			<div>
+				<div id="limiter">LIMITER</div>
+			</div>
+		</div>
+		<div>
+			<header>DEPLOY</header>
+			<div id="deploy-mode">
+				<div>NO</div>
+				<div>QUAL</div>
+				<div>ATK</div>
+				<div>BAL</div>
+				<div>BUILD</div>
+			</div>
+			<div>
+				<div>EngineBrake</div>
+				<div id="engine-brake">2</div>
+			</div>
+		</div>
+		<div>
+			<header>BRAKE</header>
+			<div>
+				<div id="bb">57.0%</div>
+			</div>
+			<div>
+				<div>Fine</div>
+				<div id="bb-fine">+0.0%</div>
+			</div>
+			<div>
+				<div>Migr</div>
+				<div id="bb-migration">0%</div>
+			</div>
+			<div>
+				<div id="bb-magic">MAGIC</div>
+			</div>
+		</div>
+		<div>
+			<header>DIFF</header>
+			<div>
+				<div>Entry</div>
+				<div id="diff-entry">2</div>
+			</div>
+			<div>
+				<div>Mid</div>
+				<div id="diff-mid">5</div>
+			</div>
+			<div>
+				<div>Exit</div>
+				<div id="diff-exit">5</div>
+			</div>
+		</div>
+	</div>
+	<script>(()=>{var t={745:(t,e,n)=>{var r,s=[].indexOf;r=n(165),t.exports=class extends r{constructor(){super(...arguments),this.emitter=new EventTarget,this.isTest=!1,this.emitApply=!1,this.proxyData={updatedKeys:new Set,old:{},data:{},watching:[]},this.proxy=new Proxy(this.proxyData,{set:function(t,e,n){return t.data[e]!==n&&(t.updatedKeys.add(e),t.data[e]=n),!0}}),this.onConnect=(t=!0)=>{if(this.proxy.connected=!0,t)return this.apply()},this.onDisconnect=(t=!0)=>{var e;for(e in this.proxy.connected=!1,t&&this.apply(),this.proxyData.updatedKeys.clear(),this.proxyData.old={},this.proxyData.data)delete this.proxyData.data[e];return this.proxyData.watching.forEach((function(t){return t.firstPass=!0}))},this.onUpdate=(t,e=!0,n=!1)=>{var r,s,i;if(!this.isTest||n){for(r=0,i=t.length;r<i;r++)s=t[r],this.proxy[s]=this.data[s];return e?this.apply():void 0}},this.onBroadcast=t=>this.emit("broadcast",t)}getData(){return this.proxyData.data}apply(){var t,e,n,r,i,a,o,c,d,h;for(this.applying=!0,h=this.proxyData.watching;h.length;){for(o=h.slice(0),e=0,i=h.length;e<i;e++)(d=h[e]).cancel||this.applyWatcher(d);h=h.filter((function(t){return s.call(o,t)<0}))}for(c=this.proxyData.watching.filter((function(t){return t.cancel})),r=0,a=c.length;r<a;r++)d=c[r],t=this.proxyData.watching.findIndex((function(t){return t===d})),this.proxyData.watching.splice(t,1);for(n of this.proxyData.updatedKeys)this.proxyData.old[n]=this.proxyData.data[n];if(this.proxyData.updatedKeys.clear(),this.applying=!1,this.emitApply)return this.emit("apply")}applyWatcher(t){var e,n,r,s,i,a,o,c;for(a=[],o=[],e=!1,n=r=0,i=(c=t.keys).length;r<i;n=++r)s=c[n],this.proxyData.updatedKeys.has(s)?(a[n]=this.proxyData.data[s],o[n]=this.proxyData.old[s],e=!0):a[n]=o[n]=this.proxyData.data[s];if(t.firstPass&&(t.firstPass=!1,e=a.some((function(t){return null!=t}))),e)return 1===a.length?t.callback(a[0],o[0]):t.callback(a,o)}watch(t,e){var n;return"string"==typeof t&&(t=[t]),this.proxyData.watching.push(n={keys:t,firstPass:!0,callback:e}),function(t){return t.cancel=!0}.bind(this,n)}emit(t,e){return this.emitter.dispatchEvent(new CustomEvent(t,{detail:e}))}}},165:(t,e,n)=>{t=n.nmd(t);var r,s=[].indexOf;r=class{constructor(t=[],e=[],n=1,r="127.0.0.1:8182",s=!1,i=null,a=null){this.requestParams=t,this.requestParamsOnce=e,this.fps=n,this.server=r,this.readIbt=s,this.record=i,this.zipLibPath=a,this.data={},this.onConnect=null,this.onDisconnect=null,this.onUpdate=null,this.onBroadcast=null,this.ws=null,this.onWSConnect=null,this.onWSDisconnect=null,this.reconnectTimeout=null,this.connected=!1,this.firstTimeConnect=!0,null!=this.record&&this.loadRecord(),this.connect()}connect(){return this.ws=new WebSocket(`ws://${this.server}/ws`),this.ws.onopen=(...t)=>this.onopen(...t),this.ws.onmessage=(...t)=>this.onmessage(...t),this.ws.onclose=(...t)=>this.onclose(...t)}close(){return this.ws.onclose=null,this.ws.close()}onopen(){var t;if("function"==typeof this.onWSConnect&&this.onWSConnect(),null!=this.reconnectTimeout&&clearTimeout(this.reconnectTimeout),null==this.record){for(t in this.data)delete this.data[t];return this.ws.send(JSON.stringify({fps:this.fps,readIbt:this.readIbt,requestParams:this.requestParams,requestParamsOnce:this.requestParamsOnce}))}}onmessage(t){var e,n,r,s,i;if(e=JSON.parse(t.data),null==this.record){if(e.disconnected&&(this.connected=!1,"function"==typeof this.onDisconnect&&this.onDisconnect()),e.connected)for(n in this.data)delete this.data[n];if((e.connected||this.firstTimeConnect&&!this.connected&&!e.broadcast)&&(this.firstTimeConnect=!1,this.connected=!0,"function"==typeof this.onConnect&&this.onConnect()),e.data){for(n in r=[],s=e.data)i=s[n],r.push(n),this.data[n]=i;"function"==typeof this.onUpdate&&this.onUpdate(r)}}if(e.broadcast)return"function"==typeof this.onBroadcast?this.onBroadcast(e.broadcast):void 0}onclose(){return"function"==typeof this.onWSDisconnect&&this.onWSDisconnect(),this.ws&&(this.ws.onopen=this.ws.onmessage=this.ws.onclose=null),this.connected&&(this.connected=!1,null==this.record&&"function"==typeof this.onDisconnect&&this.onDisconnect()),this.reconnectTimeout=setTimeout((()=>this.connect.apply(this)),2e3)}sendCommand(t,...e){return this.ws.send(JSON.stringify({command:t,args:e}))}broadcast(t){return this.ws.send(JSON.stringify({broadcast:t}))}loadRecord(){var t,e;return t=this.zipLibPath&&-1!==this.record.search(/\.zip$/i),(e=new XMLHttpRequest).onreadystatechange=()=>{var n,r;if(4===e.readyState&&200===e.status)return t?(n=document.head,(r=document.createElement("script")).src=this.zipLibPath+"zip.js",n.appendChild(r),r.addEventListener("load",(()=>{var t;return zip.useWebWorkers=!1,(t=document.createElement("script")).src=this.zipLibPath+"inflate.js",n.appendChild(t),t.addEventListener("load",(()=>zip.createReader(new zip.BlobReader(e.response),(e=>e.getEntries((s=>s[0].getData(new zip.TextWriter,(s=>(e.close(),n.removeChild(t),n.removeChild(r),this.onRecord(JSON.parse(s)))))))))))}))):this.onRecord(e.response)},e.open("GET",this.record,!0),e.responseType=t?"blob":"json",e.send()}onRecord(t){return this.connected=!0,"connected"in t[0]||t.unshift({connected:!0}),this.record={frames:t,requestedParamsOnce:[]},"function"==typeof this.onConnect?this.onConnect():void 0}playRecord(t=0,e=null,n=1){var r;for(this.record.currentFrame=0,"function"==typeof this.onConnect&&this.onConnect(!1),r=t;r-- >=0;)this.record.currentFrame++,this.playRecordFrame(!1);return null!=this.record.playInterval&&clearInterval(this.record.playInterval),!n||null!=e&&t>=e?this.record.currentFrame<this.record.frames.length-1?setTimeout((()=>(this.record.currentFrame++,this.playRecordFrame())),1):void 0:this.record.playInterval=setInterval((()=>this.record.currentFrame<this.record.frames.length-1&&!(null!=e&&this.record.currentFrame>=e)?(this.record.currentFrame++,this.playRecordFrame()):clearInterval(this.record.playInterval)),1e3/n)}resetRecord(){return null!=this.record.playInterval&&clearInterval(this.record.playInterval),setTimeout((()=>{var t;for(t in this.record.requestedParamsOnce=[],this.data)delete this.data[t];return"function"==typeof this.onDisconnect&&this.onDisconnect(),setTimeout((()=>"function"==typeof this.onConnect?this.onConnect():void 0),500)}),100)}playRecordFrame(t=!0){var e,n,r,i,a;if(null!=(e=this.record.frames[this.record.currentFrame])?e.data:void 0){for(n in r=[],i=e.data)a=i[n],(s.call(this.requestParams,"__all_telemetry__")>=0||s.call(this.requestParams,n)>=0||s.call(this.requestParamsOnce,n)>=0&&s.call(this.record.requestedParamsOnce,n)<0)&&(r.push(n),this.data[n]=a,s.call(this.requestParamsOnce,n)>=0&&s.call(this.record.requestedParamsOnce,n)<0&&this.record.requestedParamsOnce.push(n));return"function"==typeof this.onUpdate?this.onUpdate(r,t):void 0}}},"undefined"!=typeof window&&null!==window&&(window.IRacing=r),null!=(null!==t?t.exports:void 0)&&(t.exports=r)}},e={};function n(r){var s=e[r];if(void 0!==s)return s.exports;var i=e[r]={id:r,loaded:!1,exports:{}};return t[r](i,i.exports,n),i.loaded=!0,i.exports}n.nmd=t=>(t.paths=[],t.children||(t.children=[]),t),(()=>{var t,e,r,s,i,a,o,c,d,h,l,u,p,f,y,m,v,g,w,x,D;for(D of(t=n(745),o={},new URLSearchParams(location.search)))[v,x]=D,o[v]=/^\d{1,10}$/.test(x)?parseInt(x):x;m=new t(["dcBrakeBias","dcBrakeBiasFine","dcBrakeMisc","dcDiffEntry","dcDiffExit","dcDiffMiddle","dcEngineBraking","dcMGUKDeployMode","dcPeakBrakeBias","dcPitSpeedLimiterToggle","DRS_Status","EnergyERSBatteryPct","OnPitRoad","DriverInfo"],[],10,o.host||"127.0.0.1:8182",!1,void 0),y=m.getData(),e=document.querySelector("#battery"),u=document.querySelector("#drs"),g=document.querySelector("#limiter"),c=document.querySelector("#deploy-mode"),p=document.querySelector("#engine-brake"),r=document.querySelector("#bb"),s=document.querySelector("#bb-fine"),a=document.querySelector("#bb-migration"),i=document.querySelector("#bb-magic"),d=document.querySelector("#diff-entry"),l=document.querySelector("#diff-mid"),h=document.querySelector("#diff-exit"),f=.01/(null!=m.record?1:10),(w=function(){return e.classList.value="",g.classList.value="",c.classList.value=""})(),m.watch("connected",(function(t,e){if(!t)return w()})),m.watch("DriverInfo",(function(t,e){var n;try{return n=y.DriverInfo.Drivers.find((function(t){return t.CarIdx===y.DriverInfo.DriverCarIdx})),document.body.classList.toggle("hidden",145!==n.CarID)}catch(t){}})),m.watch("EnergyERSBatteryPct",(function(t,n){var r,s;if(null!=t)return s=(x=100*Math.max(0,Math.min(t,1)))<1?Math.ceil:x>99?Math.floor:Math.round,e.textContent=`${s(x)}%`,r=Math.abs(t-n),e.classList.toggle("charging",n>t&&r>f),e.classList.toggle("recharging",n<t&&r>f)})),m.watch("DRS_Status",(function(t,e){return u.classList.value="",u.classList.add(`state-${t}`)})),m.watch(["OnPitRoad","dcPitSpeedLimiterToggle"],(function(t,e){return g.classList.toggle("deactivated",t[0]&&!t[1]),g.classList.toggle("active",t[1])})),m.watch("dcMGUKDeployMode",(function(t,e){return c.classList.value="",c.classList.add(`mode-${t}`)})),m.watch("dcEngineBraking",(function(t,e){return p.textContent=t})),m.watch("dcBrakeBias",(function(t,e){return r.textContent=`${t.toFixed(1)}%`})),m.watch("dcBrakeBiasFine",(function(t,e){return s.textContent=`${t>=0?"+":""}${t.toFixed(1)}%`})),m.watch("dcPeakBrakeBias",(function(t,e){return a.textContent=t-1+"%"})),m.watch("dcBrakeMisc",(function(t,e){return i.classList.toggle("active",t)})),m.watch("dcDiffEntry",(function(t,e){return d.textContent=t})),m.watch("dcDiffMiddle",(function(t,e){return l.textContent=t})),m.watch("dcDiffExit",(function(t,e){return h.textContent=t}))})()})();</script>
+</body>
+</html>

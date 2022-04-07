@@ -1,0 +1,85 @@
+@bootstrap-path: "/libs/bootstrap/less/";
+@import "@{bootstrap-path}variables.less";
+@icon-font-path: "/libs/bootstrap/fonts/";
+@import "@{bootstrap-path}glyphicons.less";
+@import "@{bootstrap-path}mixins/size.less";
+@import "@{bootstrap-path}mixins/vendor-prefixes.less";
+
+html, body {
+	overflow: auto;
+	margin: 0;
+	height: inherit;
+}
+
+body {
+	padding-top: 70px;
+	@media (max-width: @grid-float-breakpoint-max) {
+		padding-top: 165px;
+	}
+}
+
+@media (min-width: @screen-sm) {
+	.container {
+		max-width: @screen-sm;
+	}
+}
+
+input,
+button {
+	outline: none !important;
+}
+
+input[type=range] {
+	-webkit-appearance: none;
+}
+
+// MARKDOWN
+
+@import (inline) "/libs/highlight/styles/monokai_sublime.css";
+
+xmp {
+	display: none;
+}
+
+pre.hljs {
+	border: none;
+}
+
+// SETTINGS
+
+.settings {
+
+	.input-url {
+		padding-bottom: 1em;
+	}
+
+	.chat-preview {
+		background: url(../img/chat-preview.jpg) center center;
+
+		#chat-wrap {
+			width: 400px;
+			height: 240px;
+			margin: auto;
+		}
+	}
+
+	.input-group.input-bg-with-opacity {
+		> input {
+			&:nth-child(2) {
+				width: 80px;
+			}
+			&:nth-child(4) {
+				width: 140px;
+			}
+		}
+		> .input-group-addon {
+			width: 60px;
+			cursor: default;
+
+			&:nth-child(3) {
+				border-left: none;
+				border-right: none;
+			}
+		}
+	}
+}

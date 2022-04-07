@@ -1,0 +1,61 @@
+<div class="index">
+
+	<div ng-if="showAnnounceRow" class="row">
+		<div class="col-xs-12">
+			<a ng-click="announce()" class="btn btn-default">
+				<span class="glyphicon glyphicon-play"></span>
+				Announce Now
+			</a>
+			<div class="pull-right">
+				<a ng-click="toggleAnnounceOn()" class="btn btn-default">
+					<span ng-class="{ 'glyphicon-volume-up': settings.announceOn }" class="glyphicon glyphicon-volume-off"></span>
+				</a>
+				<a app-announce-point class="btn btn-default"
+						data-toggle="popover"
+						data-content="Place your car at point on track, where you want to hear auto-announce and hit that button.<br>Point saved for each track individually.">
+					<span class="glyphicon glyphicon-map-marker"></span>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-7 fuel-level">
+			<div app-fuel-level class="value"></div>
+			<div class="text-muted description">Fuel Level</div>
+		</div>
+		<div class="col-xs-5 fuel-per-lap">
+			<div app-fuel-per-lap class="value"></div>
+			<div class="text-muted description">Usage Per Lap</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-7 fuel-remain-laps">
+			<div app-fuel-remain-laps class="value"></div>
+			<div class="text-muted description">Remain Laps</div>
+		</div>
+		<div class="col-xs-5 fuel-need-refuel">
+			<div app-fuel-need-refuel class="value"></div>
+			<div class="text-muted description">
+				<i ng-if="ir.fuelNeedRefuel > 0" class="text-danger glyphicon glyphicon-fire"></i>
+				<i ng-if="ir.fuelNeedRefuel == 0" class="text-success glyphicon glyphicon-thumbs-up"></i>
+				Need Refuel
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-7 fuel-remain-laps">
+			<div app-race-laps class="value"></div>
+			<div class="text-muted description">Laps in Race</div>
+		</div>
+		<div class="col-xs-5 fuel-need-refuel">
+			<div app-race-fuel class="value"></div>
+			<div class="text-muted description">Race Fuel</div>
+		</div>
+	</div>
+
+</div>
+
+

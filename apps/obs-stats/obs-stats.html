@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Mihail Latyshov" />
+	<title>OBS Stats</title>
+	<style>
+		@import url("https://fonts.googleapis.com/css2?family=Share+Tech&family=Share+Tech+Mono&display=swap");
+::-webkit-scrollbar{visibility:hidden}html,body{overflow:hidden;margin:0;width:100%;height:100%}body{user-select:none;font-family:'Share Tech',sans-serif;font-size:10vh;color:#fff;background-color:rgba(0,0,0,0.8);height:100%;display:flex;flex-direction:column;justify-content:space-evenly;padding:0 10vh;box-sizing:border-box}body > div span.warning{color:#e5e600}body > div span.danger{color:#f50}body > .stats{display:flex;flex-direction:row;justify-content:space-between;column-gap:12vh}body > .stats > div{display:grid;grid-template-columns:repeat(2,min-content);column-gap:12vh;align-content:space-evenly}body > .stats > div span{white-space:nowrap}body > .stats > div span[id]{font-family:'Share Tech Mono',monospace}body > .outputs{display:grid;grid-template-columns:repeat(5,min-content);column-gap:12vh;justify-content:space-between}body > .outputs header{white-space:nowrap;font-weight:bold}body > .outputs span{white-space:nowrap}body > .outputs span.mono{font-family:'Share Tech Mono',monospace}body > .outputs span#stream-status.live{color:#0c0}body > .outputs span#stream-status.reconnecting{color:#e5e600}
+	</style>
+</head>
+<body>
+	<div class="stats">
+		<div>
+			<span class="label">CPU Usage</span>
+			<span>
+				<span id="cpu-usage" data-type="percent"></span>%
+			</span>
+			<span class="label">Disk space available</span>
+			<span>
+				<span id="free-disk-space" data-type="size"></span>
+			</span>
+			<span class="label">Disk full in (approx.)</span>
+			<span>
+				<span id="disk-full-in-arpprox"></span>
+			</span>
+			<span class="label">Memory Usage</span>
+			<span>
+				<span id="memory-usage" data-type="size"></span>
+			</span>
+		</div>
+
+		<div>
+			<span class="label">FPS</span>
+			<span id="fps" data-to-fixed="2"></span>
+			<span class="label">Average time to render frame</span>
+			<span>
+				<span id="average-frame-time" data-to-fixed="1"></span>
+				ms
+			</span>
+			<span class="label">Frames missed due to rendering lag</span>
+			<span>
+				<span id="render-missed-frames"></span>
+				/
+				<span id="render-total-frames"></span>
+				(<span id="render-missed-frames-percent" data-to-fixed="1"></span>%)
+			</span>
+			<span class="label">Skipped frames due to encoding lag</span>
+			<span>
+				<span id="output-skipped-frames"></span>
+				/
+				<span id="output-total-frames"></span>
+				(<span id="output-skipped-frames-percent" data-to-fixed="1"></span>%)
+			</span>
+		</div>
+	</div>
+
+	<div class="outputs">
+		<header>Output</header>
+		<header>Status</header>
+		<header>Dropped Frames (Network)</header>
+		<header>Total Data Output</header>
+		<header>Bitrate</header>
+
+		<span>Stream</span>
+		<span id="stream-status"></span>
+		<span>
+			<span id="stream-dropped-frames" class="mono"></span> / <span id="stream-total-frames" class="mono"></span>
+			(<span id="stream-dropped-frames-percent" class="mono"></span>%)
+		</span>
+		<span id="stream-total-data-output" class="mono"></span>
+		<span id="stream-bitrate" class="mono"></span>
+
+		<span>Recording</span>
+		<span id="recording-status"></span>
+		<span id="recording-dropped-frames" class="mono"></span>
+		<span id="recording-total-data-output" class="mono"></span>
+		<span id="recording-bitrate" class="mono"></span>
+	</div>
+
+	<script src="/libs/obs-websocket.js"></script>
+	<script>!function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,(function(r){return o(e[i][1][r]||r)}),p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}({1:[function(require,module,exports){var bytesToText,connect,getData,getDataInterval,obs,prevRecording,prevStreaming,recordingBitrateHistory,searchParams,startStats,update;searchParams=new URLSearchParams(location.search),obs=new OBSWebSocket,getDataInterval=null,startStats=null,prevStreaming=null,prevRecording=null,recordingBitrateHistory=[],(connect=async function(){var address,e,password;try{return address=searchParams.get("address"),password=searchParams.get("password"),await obs.connect({address:address,password:password})}catch(error){return e=error,console.log(e)}})(),obs.on("ConnectionClosed",(function(){return setTimeout(connect,1e3),clearInterval(getDataInterval)})),obs.on("AuthenticationSuccess",(function(){return startStats=null,prevStreaming=null,prevRecording=null,recordingBitrateHistory=[],getDataInterval=setInterval(getData,2e3),getData()})),getData=async function(){var data,e,recording,stats,streaming;try{return stats=(data=await obs.send("GetStats")).stats,null==startStats&&(startStats=stats),streaming=(data=await obs.send("ListOutputs")).outputs.find((function(o){return"adv_stream"===o.name})),recording=data.outputs.find((function(o){return"adv_file_output"===o.name})),update(stats,streaming,recording)}catch(error){return e=error,console.log(e)}},update=function(stats,streaming,recording){var avgBitrate,bitrateRecording,bitrateStreaming,el,i,j,len,len1,minutes,ref,ref1,ref2,ref3,toFixed,value;if(startStats["output-total-frames"]>stats["output-total-frames"]&&(startStats=stats),null!=streaming&&null!=prevStreaming&&prevStreaming.totalBytes>streaming.totalBytes&&(prevStreaming=null),recording.active&&null!=prevRecording&&prevRecording.totalBytes>recording.totalBytes&&(prevRecording=null),null!=streaming&&null!=prevStreaming&&(bitrateStreaming=(streaming.totalBytes-prevStreaming.totalBytes)/2/1024*8),recording.active&&null!=prevRecording)for(bitrateRecording=(recording.totalBytes-prevRecording.totalBytes)/2/1024*8,recordingBitrateHistory.push(bitrateRecording);recordingBitrateHistory.length>20;)recordingBitrateHistory.shift();for(i=0,len=(ref=document.querySelectorAll(".stats span[id]")).length;i<len;i++){switch(value=stats[(el=ref[i]).id],el.id){case"render-missed-frames":value=stats["render-missed-frames"]-startStats["render-missed-frames"];break;case"render-total-frames":value=stats["render-total-frames"]-startStats["render-total-frames"];break;case"render-missed-frames-percent":value=(stats["render-missed-frames"]-startStats["render-missed-frames"])/(stats["render-total-frames"]-startStats["render-total-frames"]),isNaN(value)&&(value=0),el.classList.toggle("warning",value>=5),el.classList.toggle("danger",value>=10);break;case"output-skipped-frames":value=stats["output-skipped-frames"]-startStats["output-skipped-frames"];break;case"output-total-frames":value=stats["output-total-frames"]-startStats["output-total-frames"];break;case"output-skipped-frames-percent":value=(stats["output-skipped-frames"]-startStats["output-skipped-frames"])/(stats["output-total-frames"]-startStats["output-total-frames"]),isNaN(value)&&(value=0),el.classList.toggle("warning",value>=5),el.classList.toggle("danger",value>=10);break;case"disk-full-in-arpprox":bitrateRecording?(avgBitrate=recordingBitrateHistory.reduce((function(a,v){return a+v})),avgBitrate/=recordingBitrateHistory.length,value=`${0|(minutes=1024*stats["free-disk-space"]/(avgBitrate/8)/60)/60}h ${(0|minutes)%60}m`):value="-"}switch(toFixed=parseInt(el.getAttribute("data-to-fixed")),null,el.getAttribute("data-type")){case"size":value=bytesToText(1048576*value);break;case"percent":value=value.toFixed(value<1?2:1)}isNaN(toFixed)||(value=value.toFixed(toFixed)),el.textContent=value}for(j=0,len1=(ref1=document.querySelectorAll(".outputs span[id]")).length;j<len1;j++){if(el=ref1[j],value=null,null!=streaming)switch(el.id){case"stream-status":value=function(){switch(!1){case!streaming.reconnecting:return"Reconnecting";case!streaming.active:return"LIVE";default:return"Inactive"}}(),el.classList.toggle("live",streaming.active),el.classList.toggle("reconnecting",streaming.reconnecting);break;case"stream-dropped-frames":value=null!=(ref2=streaming.droppedFrames)?ref2:"-";break;case"stream-total-frames":value=null!=(ref3=streaming.totalFrames)?ref3:"-";break;case"stream-dropped-frames-percent":value=(streaming.droppedFrames/streaming.totalFrames).toFixed(1),isNaN(value)&&(value=0),el.classList.toggle("warning",value>=5),el.classList.toggle("danger",value>=10);break;case"stream-total-data-output":value=bytesToText(streaming.totalBytes);break;case"stream-bitrate":value=null!=bitrateStreaming?bitrateStreaming.toFixed(0)+" kb/s":""}else switch(el.id){case"stream-status":value="Inactive",el.classList.toggle("live",!1),el.classList.toggle("reconnecting",!1)}switch(el.id){case"recording-status":value=recording.active?"Recording":"Inactive";break;case"recording-dropped-frames":value="";break;case"recording-total-data-output":recording.active&&(value=bytesToText(recording.totalBytes));break;case"recording-bitrate":null!=bitrateRecording&&(value=bitrateRecording.toFixed(0)+" kb/s")}null!=value&&(el.textContent=value)}return prevStreaming=streaming,prevRecording=recording},bytesToText=function(bytes){var level;for(level=1;bytes/1024**level>=1024;)level++;return(bytes/1024**level).toFixed(1)+" "+["B","MB","GB","TB"][level-1]}},{}]},{},[1]);</script>
+</body>
+</html>

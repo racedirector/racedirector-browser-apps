@@ -1,0 +1,220 @@
+<div class="row settings">
+	<div class="col-md-12">
+
+		<button ng-if="ready && !authenticated" ng-click="connect()" class="center-block twitch-connect-btn"></button>
+
+		<form ng-if="authenticated" class="form-horizontal">
+
+			<!-- url -->
+			<div class="input-group input-url">
+				<span class="input-group-addon">Don't Share This URL</span>
+				<input ng-model="url" type="url" class="form-control">
+				<span class="input-group-btn">
+					<a class="btn btn-default" ng-href="{{url}}" target="_blank">Go!</a>
+				</span>
+			</div>
+
+			<!-- donation -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Donations</h3>
+				</div>
+				<div class="panel-body">
+					<!-- imraising -->
+					<!-- <div class="form-group">
+						<label for="inputImRaising" class="col-sm-3 control-label">ImRaising</label>
+						<div class="col-sm-5">
+							<input ng-model="settings.imRaisingLimitedKey" ng-change="saveSettings()" type="text" class="form-control" id="inputImRaising" placeholder="Limited Key" />
+						</div>
+						<span id="helpBlock" class="help-block">Limited Key from <a href="https://imraising.tv/dashboard/settings/" target="_blank">here</a>.</span>
+					</div> -->
+					<!-- twitchalerts -->
+					<div class="form-group">
+						<label for="inputStreamLabs" class="col-sm-3 control-label">StreamLabs</label>
+						<div class="col-sm-5">
+							<input ng-model="settings.streamLabsToken" ng-change="saveSettings()" type="text" class="form-control" id="inputStreamLabs" placeholder="API Access Token" />
+						</div>
+						<span id="helpBlock" class="help-block">API Access Token from <a app-tooltip="Go to API Tokens &rarr; Your API Access Token" href="https://streamlabs.com/dashboard#/apisettings" target="_blank">here</a>.</span>
+					</div>
+					<!-- donation-tracker -->
+					<!-- <div class="form-group">
+						<label class="col-sm-3 control-label">Donation Tracker</label>
+						<div class="col-sm-2">
+							<input ng-model="settings.donationTrackerChannel" ng-change="saveSettings()" type="text" class="form-control" placeholder="Channel" />
+						</div>
+						<div class="col-sm-3">
+							<input ng-model="settings.donationTrackerKey" ng-change="saveSettings()" type="text" class="form-control" placeholder="API Key" />
+						</div>
+						<span id="helpBlock" class="help-block">Channel and API Key from <a href="http://www.donation-tracker.com/dashboard" target="_blank">here</a>.</span>
+					</div> -->
+				</div>
+			</div>
+
+			<!-- customizations -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Customizations</h3>
+				</div>
+				<div class="panel-body">
+					<!-- counters -->
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Counters</label>
+						<div class="col-sm-9">
+							<label class="checkbox-inline">
+								<input ng-model="settings.showViewersCounter" ng-change="saveSettings()" type="checkbox">
+								Viewers
+							</label>
+							<label class="checkbox-inline">
+								<input ng-model="settings.showFollowersCounter" ng-change="saveSettings()" type="checkbox">
+								Followers.
+							</label>
+						</div>
+					</div>
+
+					<!-- show emoticons -->
+					<div class="form-group">
+						<label for="inputShowEmoticons" class="col-sm-3 control-label">Emoticons</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.showEmoticons" ng-change="saveSettings()" type="checkbox" id="inputShowEmoticons">
+									Show emoticons in chat.
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- show badges -->
+					<div class="form-group">
+						<label for="inputShowBadges" class="col-sm-3 control-label">Badges</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.showBadges" ng-change="saveSettings()" type="checkbox" id="inputShowBadges">
+									Show user badges. <em>(mod, turbo, sub, etc...)</em>
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- bits -->
+					<div class="form-group">
+						<label for="inputShowBits" class="col-sm-3 control-label">Cheers</label>
+						<div class="col-sm-3">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.showBits" ng-change="saveSettings()" type="checkbox" id="inputShowBits">
+									Show cheers icons
+								</label>
+							</div>
+						</div>
+						<div ng-if="settings.showBits" class="col-sm-2">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.bitsType" ng-change="saveSettings()" type="checkbox">
+									{{ settings.bitsType ? 'Animated' : 'Static' }}
+								</label>
+							</div>
+						</div>
+						<div ng-if="settings.showBits" class="col-sm-4">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.bitsTheme" ng-change="saveSettings()" type="checkbox">
+									<span ng-if="settings.bitsTheme">Dark <em>for dark backgrounds.</em></span>
+									<span ng-if="!settings.bitsTheme">Light <em>for light backgrounds.</em></span>
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- filter betbot -->
+					<div ng-if="!isDefaultHost" class="form-group">
+						<label for="inputBetBotFilter" class="col-sm-3 control-label">Filter BetBot</label>
+						<div class="col-sm-4">
+							<input ng-model="settings.filterBetBot" ng-change="saveSettings()" type="text" class="form-control" id="inputBetBotFilter" placeholder="BetBot Username" />
+						</div>
+						<div class="col-sm-5">
+							<span class="help-block">Filter most messages related to BetBot.</span>
+						</div>
+					</div>
+
+					<!-- filter bots -->
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Filter Bots</label>
+						<div class="col-sm-9">
+							<selectize config="{create:true, options:['MooBot', 'NightBot']}" ng-model="settings.filterBots" ng-change="saveSettings()" type="text" class="form-control" placeholder="Usernames  " /></selectize>
+						</div>
+					</div>
+
+					<!-- smooth scrolling -->
+					<div class="form-group">
+						<label for="inputSmoothScrolling" class="col-sm-3 control-label">Smooth Scrolling</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.smoothScrolling" ng-change="saveSettings()" type="checkbox" id="inputSmoothScrolling">
+									Scroll chat smoothly when new message shows.
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- strike out messages -->
+					<div class="form-group">
+						<label for="inputStrikeOutMessages" class="col-sm-3 control-label">Strike Out Messages</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.strikeOutMessages" ng-change="saveSettings()" type="checkbox" id="inputStrikeOutMessages">
+									Only strike out "<s>deleted</s>" messages (not remove).
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- highlight messages -->
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Highlight Messages</label>
+						<div class="col-sm-5">
+							<selectize config="{create:true, persist:false}" ng-model="settings.highlightMessages" ng-change="saveSettings()" type="text" class="form-control" placeholder="Words to search  " /></selectize>
+						</div>
+						<span id="helpBlock" class="help-block">The message with one of those words will be highlighted.</span>
+					</div>
+
+					<!-- wc drivers irating badge -->
+					<div class="form-group">
+						<label for="inputIRatings" class="col-sm-3 control-label">iRating Badge</label>
+						<div class="col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input ng-model="settings.showIRatings" ng-change="saveSettings()" type="checkbox" id="inputIRatings">
+									Show WC drivers iRating badge.
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- system -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">System</h3>
+				</div>
+				<div class="panel-body">
+					<!-- host -->
+					<div ng-if="!isDefaultHost" class="form-group">
+						<label for="inputHost" class="col-sm-3 control-label">Server</label>
+						<div class="col-sm-3">
+							<input ng-model="settings.host" ng-change="saveSettings()" type="text" class="form-control" id="inputHost" placeholder="127.0.0.1:8184" />
+						</div>
+						<div class="col-sm-6">
+							<span class="help-block">Chat.exe server address and port. Use it if you want to see chat on your smartphone, tablet, or another PC.</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+</div>

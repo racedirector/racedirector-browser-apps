@@ -1,0 +1,164 @@
+<main>
+	<div class="container">
+		<p class="title"><span>iRacing Browser Apps</span></p>
+		<p class="desc">A bridge between iRacing API and web browser based applications</p>
+		<p class="download">
+			<a href="/downloads/iRacingBrowserApps.zip" class="btn btn-outline-inverse btn-lg">Download</a>
+		</p>
+	</div>
+</main>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<xmp app-markdown>
+			## Applications
+
+			### [Stream-Overlay &rarr;](/stream-overlay/)
+
+			Overlay for first person streamers.
+
+			#### Features:
+			- Standings
+			- Relatives
+			- Fuel, Water / Oil temps, Wind direction and speed, Track temp and SOF
+			- Tyres temps
+			- Twitch connection
+
+			_PS Thanks to [Juha-Pekka Lammi](http://members.iracing.com/membersite/member/CareerStats.do?custid=71846) for being a tester. Hit dat follow button on his [Twitch channel](http://www.twitch.tv/jplays)._
+
+			---
+
+			### iR TrackOverlay & Accelerometer (by [Wolfgang Höhn](http://members.iracing.com/membersite/member/CareerStats.do?custid=127502))
+
+			#### [Track overlay](/ir-mapoverlay/overlay-map/)
+
+			A stylized track map showing all cars and their position (car number if no time/position is set) on track or in pits. Tracks are based on [RivalTracker by Sam Hazim](https://github.com/SamHazim/RivalTracker) with many of them redrawn and missing tracks for iRacing added.
+
+			#### [Accelerometer](/ir-mapoverlay/overlay-accel/)
+
+			Displays the lateral and longitudinal acceleration on a scale of 3G on the drivers car.
+
+			[Forum thread &rarr;](http://members.iracing.com/jforum/posts/list/3250323.page)
+
+			---
+<!--
+			### [Stream Monitor](/stream-monitor/)
+
+			Spaceship control panel.
+
+			---
+ -->
+			### [Twitch Chat](/twitch-chat/)
+
+			Customizable twitch chat overlay for OBS.
+
+			---
+
+			### [Twitch Bet Bot](/bet-bot/)
+
+			To involve people into your race more than ever before...
+
+			[UserScript](/userscripts/twitch-betbot-filter.user.js) to filter unwanted BetBot and "!raffle" messages in chat. (Tested only in chrome with [TamperMonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo))
+
+			[Forum thread &rarr;](http://members.iracing.com/jforum/posts/list/3263928.page)
+
+			---
+
+			### [Fuel Calculator](/fuel-calc/)
+
+			This application will show your current fuel consumption, and how much fuel you need to get on next pitstop to finish the race.
+
+			It can announce this values for you with [ResponsiveVoice](http://responsivevoice.org).
+
+			__Warning__: Always calculate fuel by yourself before the race, don't blame me for wrong fuel calculation by this app.
+
+			---
+
+			### [Setup Comparison Tool](/setup-comparison-tool/)
+
+			It's better than doing screenshots in photoshop and then try to compare them.
+
+			---
+
+			### [Setup Cover Overlay](/setup-cover/)
+
+			Cover your garage setup screen with an image.
+
+			---
+
+			### [Helmet Overlay for VR](/helmet-overlay/)
+
+			Places helmet image when you are in a car.
+
+			---
+
+			### [Browser Apps Addons by GripTV.org](/ir-browserapps-addons/) (by [Timo Wesendahl](http://members.iracing.com/membersite/member/CareerStats.do?custid=129534))
+
+			#### Gear & Speed
+
+			Adds an additional blackbox showing the current gear & speed (currently in km/h).
+
+			#### Pedals & G-Force
+
+			Adds an additional blackbox showing the pedal inputs (throttle, brake, clutch) and a g-force meter.
+
+			---
+
+			### [OBS Stats &rarr;](/obs-stats/)
+
+			OBS Stats - is a Browser friendly copy of **View &rarr; Stats** window in OBS Studio.
+
+			---
+
+			### [Spotter by 15.ai &rarr;](/spotter-by-15.ai/)
+
+			Natural TTS spotter packs by [15.ai](https://15.ai).
+
+			---
+
+			### [Debug &rarr;](/debug/)
+
+			Debug application to see what data from iRacing available right now.
+
+			---
+
+			<p class="text-muted">If you want to customize applications, create your own from existed, or if you want to use it locally, then [download applications](/downloads/apps.zip) and unzip it into `apps` folder inside iRacingBrowserApps folder.</p>
+
+			## Technologies under the hood
+			</xmp>
+
+			<div class="row">
+				<div class="col-md-3">
+					<xmp app-markdown>
+					#### Server:
+					- [cx_Freeze](http://cx-freeze.sourceforge.net/)
+					- [irc](https://pypi.python.org/pypi/irc)
+					- [pyirsdk](https://pypi.python.org/pypi/pyirsdk)
+					- [Python 3](https://www.python.org/download/)
+					- [PyYAML](http://pyyaml.org/)
+					- [sockjs](http://sockjs.org)
+					- [Tornado](http://www.tornadoweb.org/)
+					- [WatchDog](http://pythonhosted.org/watchdog/)
+					</xmp>
+				</div>
+
+				<div class="col-md-3">
+					<xmp app-markdown>
+					#### Client:
+					- [Angular-Strap](https://github.com/mgcrea/angular-strap)
+					- [Angular](http://angularjs.org/)
+					- [Bootstrap](http://getbootstrap.com/)
+					- [CoffeeScript](http://coffeescript.org)
+					- [Ember](http://emberjs.com/)
+					- [Highlight](https://highlightjs.org/)
+					- [JSON Editor](https://github.com/josdejong/jsoneditor)
+					- [LESSCSS](http://www.lesscss.com/)
+					- [Marked](https://github.com/chjj/marked)
+					</xmp>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+</div>

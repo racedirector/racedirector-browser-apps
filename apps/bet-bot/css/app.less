@@ -1,0 +1,32 @@
+@bootstrap-path: "/libs/bootstrap/less/";
+@import "@{bootstrap-path}variables.less";
+
+body {
+	padding-top: 70px;
+	@media (max-width: @grid-float-breakpoint-max) {
+		padding-top: 165px;
+	}
+}
+
+@media (min-width: @screen-sm) {
+	.container {
+		max-width: @screen-sm;
+	}
+}
+
+input,
+button {
+	outline: none !important;
+}
+
+// MARKDOWN
+
+@import (inline) "/libs/highlight/styles/monokai_sublime.css";
+
+xmp {
+	display: none;
+}
+
+pre.hljs {
+	border: none;
+}

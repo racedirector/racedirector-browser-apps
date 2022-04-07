@@ -1,0 +1,118 @@
+html, body {
+	margin: 0;
+	height: 100%;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+#chat-wrap {
+	display: flex;
+	height: 100%;
+	background: rgba(0, 0, 0, 0);
+	transition: 0.5s background linear;
+	border-radius: 6px;
+}
+
+#chat-box {
+	flex: 1;
+	color: #fff;
+	font-family: Arial, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	margin: 2px 4px;
+	overflow: hidden;
+
+	> .chat-line {
+		line-height: 22px;
+		white-space: nowrap;
+
+		&.notify {
+			color: #ddd;
+		}
+
+		&.sub {
+			padding-left: 3px;
+			border-left: 4px solid #6441A5;
+		}
+
+		&.cheer {
+			padding-left: 3px;
+			border-left: 4px solid #6441A5;
+		}
+
+		&.reward {
+			color: #ddd;
+			padding-left: 3px;
+			border-left: 4px solid #6441A5;
+		}
+
+		&.highlighted-message > .message {
+			background: #6441A5;
+			padding: 1px 6px 2px;
+			text-shadow: none;
+		}
+
+		> .irating-badge {
+			display: inline-block;
+			box-sizing: border-box;
+			font-family: Consolas, monospace;
+			font-size: 15px;
+			color: #E7E7E7;
+			height: 18px;
+			line-height: 15px;
+			vertical-align: middle;
+			padding: 0 2px;
+			margin-right: 3px;
+			margin-bottom: 3px;
+			border: 2px solid #ccc;
+			border-radius: 4px;
+			background-color: black;
+		}
+
+		> .tag {
+			display: inline-block;
+			height: 18px;
+			width: 18px;
+			margin-right: 3px;
+			margin-bottom: 1px;
+			vertical-align: middle;
+			background-repeat: no-repeat;
+			background-size: 18px;
+		}
+
+		> .username {
+			font-weight: bold;
+		}
+
+		> .message {
+			white-space: normal;
+			word-wrap: break-word;
+
+			> .emoticon {
+				max-height: 28px;
+				margin: -8px 0 -5px;
+				vertical-align: middle;
+			}
+
+			> .bits {
+				white-space: nowrap;
+
+				> img {
+					max-height: 28px;
+					margin: -8px 0 -5px;
+					vertical-align: middle;
+				}
+			}
+
+			> .highlight-word {
+				color: white;
+				background-color: #7d5bbe;
+				padding: 0.1em 0.2em;
+				text-shadow: none;
+			}
+		}
+	}
+}
+

@@ -1,0 +1,185 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:600,700);
+@import url(https://fonts.googleapis.com/css?family=Inconsolata:700);
+
+@font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-family-monospace: Inconsolata, Consolas, monospace;
+@icon-size: 18px;
+@icon-win-size: 24px;
+
+::-webkit-scrollbar {
+	visibility: hidden;
+}
+
+html, body {
+	font-family: @font-family;
+	background: transparent;
+	color: white;
+	font-size: 16px;
+	height: 100%;
+}
+
+.index-view {
+	// test
+	// width: 200px;
+	height: 100%;
+	background: fade(black, 30%);
+	border-radius: 6px;
+	// padding: 2px 6px 4px;
+	text-shadow: 0 0 4px fade(black, 75%), 0 0 4px fade(black, 75%), 0 0 4px fade(black, 75%);
+
+	> .bets-board {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		height: 100%;
+
+		&.bets-closed {
+			opacity: 0.8;
+		}
+
+		> header {
+			 > h1 {
+				font-size: 22px;
+				font-weight: bold;
+				margin-bottom: 0;
+				margin-top: 0;
+				padding-bottom: 8px;
+				text-align: center;
+
+				> .bet-type {
+					width: @icon-win-size;
+					height: @icon-win-size;
+					display: inline-block;
+					vertical-align: bottom;
+				}
+			}
+
+			&.win > h1 > .bet-type {
+				.icon('../img/win.png', @icon-win-size);
+			}
+			&.top5 > h1 > .bet-type {
+				.icon('../img/top5.png', @icon-win-size);
+			}
+			&.finish > h1 > .bet-type {
+				.icon('../img/finish.png', @icon-win-size);
+			}
+			&.crash > h1 > .bet-type {
+				.icon('../img/crash.png', @icon-win-size);
+			}
+		}
+
+		> .bets {
+			width: ~'calc(100% - 12px)';
+			margin: 0 6px 4px;
+
+			> tbody > tr > td {
+				border-top: 2px solid #ddd;
+				border-bottom: 2px solid #ddd;
+				padding: 1px 0;
+				white-space: nowrap;
+				font-family: @font-family-monospace;
+
+				&.total-bets, &.payout {
+					text-align: right;
+				}
+
+				&.eye {
+					width: 30px;
+					text-align: center;
+				}
+
+				i {
+					font-size: 13px;
+				}
+			}
+
+			> tbody > tr {
+				> td.bet-type {
+					padding-left: @icon-size + 6;
+				}
+
+				&.win > td.bet-type {
+					.icon('../img/win.png', @icon-size);
+				}
+				&.top5 > td.bet-type {
+					.icon('../img/top5.png', @icon-size);
+				}
+				&.finish > td.bet-type {
+					.icon('../img/finish.png', @icon-size);
+				}
+				&.crash > td.bet-type {
+					.icon('../img/crash.png', @icon-size);
+				}
+			}
+		}
+
+		.user-bets {
+			padding: 0 6px;
+			margin-bottom: 4px;
+			overflow: hidden;
+			-webkit-box-flex: 1;
+
+			> li {
+				> .bet-type, > .amount {
+					font-family: @font-family-monospace;
+				}
+				> .bet-type {
+					float: left;
+				}
+				> .amount {
+					float: right;
+				}
+				> .username {
+					overflow: hidden;
+					padding-left: @icon-size + 6;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+
+				&.win > .username {
+					.icon('../img/win.png', @icon-size);
+				}
+				&.top5 > .username {
+					.icon('../img/top5.png', @icon-size);
+				}
+				&.finish > .username {
+					.icon('../img/finish.png', @icon-size);
+				}
+				&.crash > .username {
+					.icon('../img/crash.png', @icon-size);
+				}
+			}
+		}
+
+		.winners {
+			padding: 0 6px;
+			margin-bottom: 4px;
+			overflow: hidden;
+			-webkit-box-flex: 1;
+
+			> ul {
+				margin-bottom: 0;
+				width: 100%;
+			    position: relative;
+
+				> li {
+					> .amount {
+						float: right;
+						font-family: @font-family-monospace;
+					}
+					> .username {
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+					}
+				}
+			}
+		}
+	}
+}
+
+// MIXINS
+
+.icon(@url, @size) {
+	background: url(@url) no-repeat left center;
+    background-size: @size @size;
+}
