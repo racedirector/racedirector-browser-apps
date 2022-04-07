@@ -1,94 +1,147 @@
-window.IRacing = class IRacing
-    constructor: (@requestParams=[], @requestParamsOnce=[], @fps=1, @server='127.0.0.1:8182', @readIbt=false, @record=null) ->
-        @data = {}
-        @onConnect = null
-        @onDisconnect = null
-        @onUpdate = null
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let IRacing;
+window.IRacing = (IRacing = class IRacing {
+    constructor(requestParams, requestParamsOnce, fps, server, readIbt, record=null) {
+        if (requestParams == null) { requestParams = []; }
+        this.requestParams = requestParams;
+        if (requestParamsOnce == null) { requestParamsOnce = []; }
+        this.requestParamsOnce = requestParamsOnce;
+        if (fps == null) { fps = 1; }
+        this.fps = fps;
+        if (server == null) { server = '127.0.0.1:8182'; }
+        this.server = server;
+        if (readIbt == null) { readIbt = false; }
+        this.readIbt = readIbt;
+        this.record = record;
+        this.data = {};
+        this.onConnect = null;
+        this.onDisconnect = null;
+        this.onUpdate = null;
 
-        @ws = null
-        @onWSConnect = null
-        @onWSDisconnect = null
-        @reconnectTimeout = null
+        this.ws = null;
+        this.onWSConnect = null;
+        this.onWSDisconnect = null;
+        this.reconnectTimeout = null;
 
-        @connected = false
-        @firstTimeConnect = true
+        this.connected = false;
+        this.firstTimeConnect = true;
 
-        if record?
-            @loadRecord()
-        else
-            @connect()
+        if (record != null) {
+            this.loadRecord();
+        } else {
+            this.connect();
+        }
+    }
 
-    connect: ->
-        @ws = new WebSocket "ws://#{@server}/ws"
-        @ws.onopen = => @onopen.apply @, arguments
-        @ws.onmessage = => @onmessage.apply @, arguments
-        @ws.onclose = => @onclose.apply @, arguments
+    connect() {
+        this.ws = new WebSocket(`ws://${this.server}/ws`);
+        this.ws.onopen = function() { return this.onopen.apply(this, arguments); }.bind(this);
+        this.ws.onmessage = function() { return this.onmessage.apply(this, arguments); }.bind(this);
+        return this.ws.onclose = function() { return this.onclose.apply(this, arguments); }.bind(this);
+    }
 
-    onopen: ->
-        @onWSConnect?()
+    onopen() {
+        if (typeof this.onWSConnect === 'function') {
+            this.onWSConnect();
+        }
 
-        if @reconnectTimeout?
-            clearTimeout @reconnectTimeout
+        if (this.reconnectTimeout != null) {
+            clearTimeout(this.reconnectTimeout);
+        }
 
-        for k of @data
-            delete @data[k]
+        for (let k in this.data) {
+            delete this.data[k];
+        }
 
-        @ws.send JSON.stringify
-            fps: @fps
-            readIbt: @readIbt
-            requestParams: @requestParams
-            requestParamsOnce: @requestParamsOnce
+        return this.ws.send(JSON.stringify({
+            fps: this.fps,
+            readIbt: this.readIbt,
+            requestParams: this.requestParams,
+            requestParamsOnce: this.requestParamsOnce
+        })
+        );
+    }
 
-    onmessage: (event) ->
-        data = JSON.parse event.data.replace /\bNaN\b/g, 'null'
+    onmessage(event) {
+        let k;
+        const data = JSON.parse(event.data.replace(/\bNaN\b/g, 'null'));
 
-        # on disconnect
-        if data.disconnected
-            @connected = false
-            if @onDisconnect
-                @onDisconnect()
+        // on disconnect
+        if (data.disconnected) {
+            this.connected = false;
+            if (this.onDisconnect) {
+                this.onDisconnect();
+            }
+        }
 
-        # clear data on connect
-        if data.connected
-            for k of @data
-                delete @data[k]
+        // clear data on connect
+        if (data.connected) {
+            for (k in this.data) {
+                delete this.data[k];
+            }
+        }
 
-        # on connect or first time connect
-        if data.connected or (@firstTimeConnect and not @connected)
-            @firstTimeConnect = false
-            @connected = true
-            if @onConnect
-                @onConnect()
+        // on connect or first time connect
+        if (data.connected || (this.firstTimeConnect && !this.connected)) {
+            this.firstTimeConnect = false;
+            this.connected = true;
+            if (this.onConnect) {
+                this.onConnect();
+            }
+        }
 
-        # update data
-        if data.data
-            keys = []
-            for k, v of data.data
-                keys.push(k)
-                @data[k] = v
-            if @onUpdate
-                @onUpdate keys
+        // update data
+        if (data.data) {
+            const keys = [];
+            for (k in data.data) {
+                const v = data.data[k];
+                keys.push(k);
+                this.data[k] = v;
+            }
+            if (this.onUpdate) {
+                return this.onUpdate(keys);
+            }
+        }
+    }
 
-    onclose: ->
-        @onWSDisconnect?()
-        if @ws
-            @ws.onopen = @ws.onmessage = @ws.onclose = null
-        if @connected
-            @connected = false
-            if @onDisconnect
-                @onDisconnect()
-        @reconnectTimeout = setTimeout (=> @connect.apply @), 2000
+    onclose() {
+        if (typeof this.onWSDisconnect === 'function') {
+            this.onWSDisconnect();
+        }
+        if (this.ws) {
+            this.ws.onopen = (this.ws.onmessage = (this.ws.onclose = null));
+        }
+        if (this.connected) {
+            this.connected = false;
+            if (this.onDisconnect) {
+                this.onDisconnect();
+            }
+        }
+        return this.reconnectTimeout = setTimeout((() => this.connect.apply(this)), 2000);
+    }
 
-    sendCommand: (command, args...) ->
-        @ws.send JSON.stringify
-            command: command
-            args: args
+    sendCommand(command, ...args) {
+        return this.ws.send(JSON.stringify({
+            command,
+            args
+        })
+        );
+    }
 
-    loadRecord: ->
-        r = new XMLHttpRequest()
-        r.onreadystatechange = ->
-            if r.readyState == 4 and r.status == 200
-                data = JSON.parse r.responseText
-                console.log data
-        r.open 'GET', @record, true
-        r.send()
+    loadRecord() {
+        const r = new XMLHttpRequest();
+        r.onreadystatechange = function() {
+            if ((r.readyState === 4) && (r.status === 200)) {
+                const data = JSON.parse(r.responseText);
+                return console.log(data);
+            }
+        };
+        r.open('GET', this.record, true);
+        return r.send();
+    }
+});

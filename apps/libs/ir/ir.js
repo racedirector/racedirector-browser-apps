@@ -1,186 +1,288 @@
-window.IRacing = class IRacing
-    constructor: (@requestParams=[], @requestParamsOnce=[], @fps=1, @server='127.0.0.1:8182', @readIbt=false, @record=null, @zipLibPath=null) ->
-        @data = {}
-        @onConnect = null
-        @onDisconnect = null
-        @onUpdate = null
-        @onBroadcast = null
+/*
+ * decaffeinate suggestions:
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let IRacing;
+window.IRacing = (IRacing = class IRacing {
+    constructor(requestParams, requestParamsOnce, fps, server, readIbt, record=null, zipLibPath=null) {
+        if (requestParams == null) { requestParams = []; }
+        this.requestParams = requestParams;
+        if (requestParamsOnce == null) { requestParamsOnce = []; }
+        this.requestParamsOnce = requestParamsOnce;
+        if (fps == null) { fps = 1; }
+        this.fps = fps;
+        if (server == null) { server = '127.0.0.1:8182'; }
+        this.server = server;
+        if (readIbt == null) { readIbt = false; }
+        this.readIbt = readIbt;
+        this.record = record;
+        this.zipLibPath = zipLibPath;
+        this.data = {};
+        this.onConnect = null;
+        this.onDisconnect = null;
+        this.onUpdate = null;
+        this.onBroadcast = null;
 
-        @ws = null
-        @onWSConnect = null
-        @onWSDisconnect = null
-        @reconnectTimeout = null
+        this.ws = null;
+        this.onWSConnect = null;
+        this.onWSDisconnect = null;
+        this.reconnectTimeout = null;
 
-        @connected = false
-        @firstTimeConnect = true
+        this.connected = false;
+        this.firstTimeConnect = true;
 
-        if @record?
-            @loadRecord()
-        @connect()
+        if (this.record != null) {
+            this.loadRecord();
+        }
+        this.connect();
+    }
 
-    connect: ->
-        @ws = new WebSocket "ws://#{@server}/ws"
-        @ws.onopen = (args...) => @onopen args...
-        @ws.onmessage = (args...) => @onmessage args...
-        @ws.onclose = (args...) => @onclose args...
+    connect() {
+        this.ws = new WebSocket(`ws://${this.server}/ws`);
+        this.ws.onopen = (...args) => this.onopen(...Array.from(args || []));
+        this.ws.onmessage = (...args) => this.onmessage(...Array.from(args || []));
+        return this.ws.onclose = (...args) => this.onclose(...Array.from(args || []));
+    }
 
-    close: ->
-        @ws.onclose = null
-        @ws.close()
+    close() {
+        this.ws.onclose = null;
+        return this.ws.close();
+    }
 
-    onopen: ->
-        @onWSConnect?()
+    onopen() {
+        if (typeof this.onWSConnect === 'function') {
+            this.onWSConnect();
+        }
 
-        if @reconnectTimeout?
-            clearTimeout @reconnectTimeout
+        if (this.reconnectTimeout != null) {
+            clearTimeout(this.reconnectTimeout);
+        }
 
-        if not @record?
-            for k of @data
-                delete @data[k]
+        if ((this.record == null)) {
+            for (let k in this.data) {
+                delete this.data[k];
+            }
 
-            @ws.send JSON.stringify
-                fps: @fps
-                readIbt: @readIbt
-                requestParams: @requestParams
-                requestParamsOnce: @requestParamsOnce
+            return this.ws.send(JSON.stringify({
+                fps: this.fps,
+                readIbt: this.readIbt,
+                requestParams: this.requestParams,
+                requestParamsOnce: this.requestParamsOnce
+            })
+            );
+        }
+    }
 
-    onmessage: (event) ->
-        # data = JSON.parse event.data.replace /\bNaN\b/g, 'null'
-        data = JSON.parse event.data
+    onmessage(event) {
+        // data = JSON.parse event.data.replace /\bNaN\b/g, 'null'
+        const data = JSON.parse(event.data);
 
-        if not @record?
-            # on disconnect
-            if data.disconnected
-                @connected = false
-                @onDisconnect?()
+        if ((this.record == null)) {
+            // on disconnect
+            let k;
+            if (data.disconnected) {
+                this.connected = false;
+                if (typeof this.onDisconnect === 'function') {
+                    this.onDisconnect();
+                }
+            }
 
-            # clear data on connect
-            if data.connected
-                for k of @data
-                    delete @data[k]
+            // clear data on connect
+            if (data.connected) {
+                for (k in this.data) {
+                    delete this.data[k];
+                }
+            }
 
-            # on connect or first time connect
-            if data.connected or (@firstTimeConnect and not @connected)
-                @firstTimeConnect = false
-                @connected = true
-                @onConnect?()
+            // on connect or first time connect
+            if (data.connected || (this.firstTimeConnect && !this.connected)) {
+                this.firstTimeConnect = false;
+                this.connected = true;
+                if (typeof this.onConnect === 'function') {
+                    this.onConnect();
+                }
+            }
 
-            # update data
-            if data.data
-                keys = []
-                for k, v of data.data
-                    keys.push(k)
-                    @data[k] = v
-                @onUpdate? keys
+            // update data
+            if (data.data) {
+                const keys = [];
+                for (k in data.data) {
+                    const v = data.data[k];
+                    keys.push(k);
+                    this.data[k] = v;
+                }
+                if (typeof this.onUpdate === 'function') {
+                    this.onUpdate(keys);
+                }
+            }
+        }
 
-        # broadcast message
-        if data.broadcast
-            @onBroadcast? data.broadcast
+        // broadcast message
+        if (data.broadcast) {
+            return (typeof this.onBroadcast === 'function' ? this.onBroadcast(data.broadcast) : undefined);
+        }
+    }
 
-    onclose: ->
-        @onWSDisconnect?()
-        if @ws
-            @ws.onopen = @ws.onmessage = @ws.onclose = null
-        if @connected
-            @connected = false
-            if not @record?
-                @onDisconnect?()
-        @reconnectTimeout = setTimeout (=> @connect.apply @), 2000
+    onclose() {
+        if (typeof this.onWSDisconnect === 'function') {
+            this.onWSDisconnect();
+        }
+        if (this.ws) {
+            this.ws.onopen = (this.ws.onmessage = (this.ws.onclose = null));
+        }
+        if (this.connected) {
+            this.connected = false;
+            if ((this.record == null)) {
+                if (typeof this.onDisconnect === 'function') {
+                    this.onDisconnect();
+                }
+            }
+        }
+        return this.reconnectTimeout = setTimeout((() => this.connect.apply(this)), 2000);
+    }
 
-    sendCommand: (command, args...) ->
-        @ws.send JSON.stringify
-            command: command
-            args: args
+    sendCommand(command, ...args) {
+        return this.ws.send(JSON.stringify({
+            command,
+            args
+        })
+        );
+    }
 
-    broadcast: (data) ->
-        @ws.send JSON.stringify broadcast: data
+    broadcast(data) {
+        return this.ws.send(JSON.stringify({broadcast: data}));
+    }
 
-    loadRecord: ->
-        isZip = @zipLibPath and @record.search(/\.zip$/i) != -1
-        r = new XMLHttpRequest
-        r.onreadystatechange = =>
-            if r.readyState == 4 and r.status == 200
-                if isZip
-                    head = document.head
-                    zipSrc = document.createElement 'script'
-                    zipSrc.src = @zipLibPath + 'zip.js'
-                    head.appendChild zipSrc
-                    zipSrc.addEventListener 'load', =>
-                        zip.useWebWorkers = false
-                        inflateSrc = document.createElement 'script'
-                        inflateSrc.src = @zipLibPath + 'inflate.js'
-                        head.appendChild inflateSrc
-                        inflateSrc.addEventListener 'load', =>
-                            zip.createReader new zip.BlobReader(r.response), (zipReader) =>
-                                zipReader.getEntries (entry) =>
-                                    entry[0].getData new zip.TextWriter, (text) =>
-                                        do zipReader.close
-                                        head.removeChild inflateSrc
-                                        head.removeChild zipSrc
-                                        @onRecord JSON.parse text
-                else
-                    @onRecord r.response
-        r.open 'GET', @record, true
-        r.responseType = if isZip then 'blob' else 'json'
-        r.send()
+    loadRecord() {
+        const isZip = this.zipLibPath && (this.record.search(/\.zip$/i) !== -1);
+        const r = new XMLHttpRequest;
+        r.onreadystatechange = () => {
+            if ((r.readyState === 4) && (r.status === 200)) {
+                if (isZip) {
+                    const {
+                        head
+                    } = document;
+                    const zipSrc = document.createElement('script');
+                    zipSrc.src = this.zipLibPath + 'zip.js';
+                    head.appendChild(zipSrc);
+                    return zipSrc.addEventListener('load', () => {
+                        zip.useWebWorkers = false;
+                        const inflateSrc = document.createElement('script');
+                        inflateSrc.src = this.zipLibPath + 'inflate.js';
+                        head.appendChild(inflateSrc);
+                        return inflateSrc.addEventListener('load', () => {
+                            return zip.createReader(new zip.BlobReader(r.response), zipReader => {
+                                return zipReader.getEntries(entry => {
+                                    return entry[0].getData(new zip.TextWriter, text => {
+                                        (zipReader.close)();
+                                        head.removeChild(inflateSrc);
+                                        head.removeChild(zipSrc);
+                                        return this.onRecord(JSON.parse(text));
+                                    });
+                                });
+                            });
+                        });
+                    });
+                } else {
+                    return this.onRecord(r.response);
+                }
+            }
+        };
+        r.open('GET', this.record, true);
+        r.responseType = isZip ? 'blob' : 'json';
+        return r.send();
+    }
 
-    onRecord: (frames) ->
-        @connected = true
-        if 'connected' not of frames[0]
-            frames.unshift connected: true
-        @record =
-            frames: frames
+    onRecord(frames) {
+        this.connected = true;
+        if (!('connected' in frames[0])) {
+            frames.unshift({connected: true});
+        }
+        this.record = {
+            frames,
             requestedParamsOnce: []
-        @onConnect?()
+        };
+        return (typeof this.onConnect === 'function' ? this.onConnect() : undefined);
+    }
 
-    playRecord: (startFrame=0, stopFrame=null, speed=1) ->
-        @record.currentFrame = 0
-        @onConnect? false
+    playRecord(startFrame, stopFrame=null, speed) {
+        if (startFrame == null) { startFrame = 0; }
+        if (speed == null) { speed = 1; }
+        this.record.currentFrame = 0;
+        if (typeof this.onConnect === 'function') {
+            this.onConnect(false);
+        }
 
-        i = startFrame
-        while i-- >= 0
-            @record.currentFrame++
-            @playRecordFrame false
+        let i = startFrame;
+        while (i-- >= 0) {
+            this.record.currentFrame++;
+            this.playRecordFrame(false);
+        }
 
-        if @record.playInterval?
-            clearInterval @record.playInterval
-        if not speed or (stopFrame? and startFrame >= stopFrame)
-            if @record.currentFrame < @record.frames.length - 1
-                setTimeout =>
-                    @record.currentFrame++
-                    @playRecordFrame()
-                , 1
-        else
-            @record.playInterval = setInterval =>
-                if @record.currentFrame < @record.frames.length - 1 and not (stopFrame? and @record.currentFrame >= stopFrame)
-                    @record.currentFrame++
-                    @playRecordFrame()
-                else
-                    clearInterval @record.playInterval
-            , 1000 / speed
+        if (this.record.playInterval != null) {
+            clearInterval(this.record.playInterval);
+        }
+        if (!speed || ((stopFrame != null) && (startFrame >= stopFrame))) {
+            if (this.record.currentFrame < (this.record.frames.length - 1)) {
+                return setTimeout(() => {
+                    this.record.currentFrame++;
+                    return this.playRecordFrame();
+                }
+                , 1);
+            }
+        } else {
+            return this.record.playInterval = setInterval(() => {
+                if ((this.record.currentFrame < (this.record.frames.length - 1)) && !((stopFrame != null) && (this.record.currentFrame >= stopFrame))) {
+                    this.record.currentFrame++;
+                    return this.playRecordFrame();
+                } else {
+                    return clearInterval(this.record.playInterval);
+                }
+            }
+            , 1000 / speed);
+        }
+    }
 
-    resetRecord: ->
-        if @record.playInterval?
-            clearInterval @record.playInterval
-        setTimeout =>
-            @record.requestedParamsOnce = []
-            for k of @data
-                delete @data[k]
-            @onDisconnect?()
-            setTimeout =>
-                @onConnect?()
-            , 500
-        , 100
+    resetRecord() {
+        if (this.record.playInterval != null) {
+            clearInterval(this.record.playInterval);
+        }
+        return setTimeout(() => {
+            this.record.requestedParamsOnce = [];
+            for (let k in this.data) {
+                delete this.data[k];
+            }
+            if (typeof this.onDisconnect === 'function') {
+                this.onDisconnect();
+            }
+            return setTimeout(() => {
+                return (typeof this.onConnect === 'function' ? this.onConnect() : undefined);
+            }
+            , 500);
+        }
+        , 100);
+    }
 
-    playRecordFrame: (update=true) ->
-        data = @record.frames[@record.currentFrame]
-        if data?.data
-            keys = []
-            for k, v of data.data
-                if '__all_telemetry__' in @requestParams or k in @requestParams or \
-                        (k in @requestParamsOnce and k not in @record.requestedParamsOnce)
-                    keys.push k
-                    @data[k] = v
-                    if k in @requestParamsOnce and k not in @record.requestedParamsOnce
-                        @record.requestedParamsOnce.push k
-            @onUpdate? keys, update
+    playRecordFrame(update) {
+        if (update == null) { update = true; }
+        const data = this.record.frames[this.record.currentFrame];
+        if (data != null ? data.data : undefined) {
+            const keys = [];
+            for (let k in data.data) {
+                const v = data.data[k];
+                if (Array.from(this.requestParams).includes('__all_telemetry__') || Array.from(this.requestParams).includes(k) || 
+                        (Array.from(this.requestParamsOnce).includes(k) && !Array.from(this.record.requestedParamsOnce).includes(k))) {
+                    keys.push(k);
+                    this.data[k] = v;
+                    if (Array.from(this.requestParamsOnce).includes(k) && !Array.from(this.record.requestedParamsOnce).includes(k)) {
+                        this.record.requestedParamsOnce.push(k);
+                    }
+                }
+            }
+            return (typeof this.onUpdate === 'function' ? this.onUpdate(keys, update) : undefined);
+        }
+    }
+});

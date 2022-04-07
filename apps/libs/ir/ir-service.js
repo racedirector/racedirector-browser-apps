@@ -1,85 +1,128 @@
-app = angular.module 'ir.service', []
-app.provider 'iRService', ->
-    @options =
+/*
+ * decaffeinate suggestions:
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS205: Consider reworking code to avoid use of IIFEs
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const app = angular.module('ir.service', []);
+app.provider('iRService', function() {
+    this.options = {
         requestParams: [
-            'DriverInfo'
+            'DriverInfo',
             'SessionInfo'
-        ]
+        ],
         requestParamsOnce: [
             'QualifyResultsInfo'
-        ]
+        ],
         fps: 10
+    };
 
-    @addOptions = (data) ->
-        for k, v of data
-            optV = @options[k]
-            if optV? and angular.isArray(optV) and angular.isArray(v)
-                for p in v when p not in optV
-                    optV.push p
-            else
-                @options[k] = v
+    this.addOptions = function(data) {
+        return (() => {
+            const result = [];
+            for (let k in data) {
+                const v = data[k];
+                var optV = this.options[k];
+                if ((optV != null) && angular.isArray(optV) && angular.isArray(v)) {
+                    result.push(Array.from(v).filter((p) => !Array.from(optV).includes(p)).map((p) =>
+                        optV.push(p)));
+                } else {
+                    result.push(this.options[k] = v);
+                }
+            }
+            return result;
+        })();
+    };
 
-    @serviceOnly = ->
-        @options = fps: 1
+    this.serviceOnly = function() {
+        return this.options = {fps: 1};
+    };
 
-    @$get = ($rootScope, config) ->
-        ir = new IRacing @options.requestParams, @options.requestParamsOnce,
-            config.fps or @options.fps, config.server or @options.server, @options.readIbt,
-            config.record, config.zipLibPath
+    this.$get = function($rootScope, config) {
+        const ir = new IRacing(this.options.requestParams, this.options.requestParamsOnce,
+            config.fps || this.options.fps, config.server || this.options.server, this.options.readIbt,
+            config.record, config.zipLibPath);
 
-        ir.onConnect = (update=true) ->
-            ir.data.connected = true
-            if update
-                $rootScope.$apply()
+        ir.onConnect = function(update) {
+            if (update == null) { update = true; }
+            ir.data.connected = true;
+            if (update) {
+                return $rootScope.$apply();
+            }
+        };
 
-        ir.onDisconnect = (update=true) ->
-            ir.data.connected = false
-            if update
-                $rootScope.$apply()
+        ir.onDisconnect = function(update) {
+            if (update == null) { update = true; }
+            ir.data.connected = false;
+            if (update) {
+                return $rootScope.$apply();
+            }
+        };
 
-        ir.onUpdate = (keys, update=true) ->
-            if 'DriverInfo' in keys
-                updateDriversByCarIdx()
-            if 'SessionInfo' in keys
-                updatePositionsByCarIdx()
-                updateQualifyResultsByCarIdx()
-            if 'QualifyResultsInfo' in keys
-                updateQualifyResultsByCarIdx()
-            # test
-            # ir.data.CamCarIdx = 19
-            # ir.data.CamCarIdx = 1 + (ir.record.currentFrame / 10 % 25 | 0)
-            # test
-            # @onmessage = ->
-            # test non metric for fuel calc
-            # if 'DisplayUnits' in keys
-            #     ir.data.DisplayUnits = 0
-            if update
-                $rootScope.$apply()
+        ir.onUpdate = function(keys, update) {
+            if (update == null) { update = true; }
+            if (Array.from(keys).includes('DriverInfo')) {
+                updateDriversByCarIdx();
+            }
+            if (Array.from(keys).includes('SessionInfo')) {
+                updatePositionsByCarIdx();
+                updateQualifyResultsByCarIdx();
+            }
+            if (Array.from(keys).includes('QualifyResultsInfo')) {
+                updateQualifyResultsByCarIdx();
+            }
+            // test
+            // ir.data.CamCarIdx = 19
+            // ir.data.CamCarIdx = 1 + (ir.record.currentFrame / 10 % 25 | 0)
+            // test
+            // @onmessage = ->
+            // test non metric for fuel calc
+            // if 'DisplayUnits' in keys
+            //     ir.data.DisplayUnits = 0
+            if (update) {
+                return $rootScope.$apply();
+            }
+        };
 
-        ir.onBroadcast = (data) ->
-            $rootScope.$broadcast 'broadcastMessage', data
+        ir.onBroadcast = data => $rootScope.$broadcast('broadcastMessage', data);
 
-        updateDriversByCarIdx = ->
-            ir.data.DriversByCarIdx ?= {}
-            for driver in ir.data.DriverInfo.Drivers
-                ir.data.DriversByCarIdx[driver.CarIdx] = driver
+        var updateDriversByCarIdx = function() {
+            if (ir.data.DriversByCarIdx == null) { ir.data.DriversByCarIdx = {}; }
+            return Array.from(ir.data.DriverInfo.Drivers).map((driver) =>
+                (ir.data.DriversByCarIdx[driver.CarIdx] = driver));
+        };
 
-        updatePositionsByCarIdx = ->
-            ir.data.PositionsByCarIdx ?= []
-            for session, i in ir.data.SessionInfo.Sessions
-                while i >= ir.data.PositionsByCarIdx.length
-                    ir.data.PositionsByCarIdx.push {}
-                if session.ResultsPositions
-                    for position in session.ResultsPositions
-                        ir.data.PositionsByCarIdx[i][position.CarIdx] = position
+        var updatePositionsByCarIdx = function() {
+            if (ir.data.PositionsByCarIdx == null) { ir.data.PositionsByCarIdx = []; }
+            return (() => {
+                const result = [];
+                for (var i = 0; i < ir.data.SessionInfo.Sessions.length; i++) {
+                    const session = ir.data.SessionInfo.Sessions[i];
+                    while (i >= ir.data.PositionsByCarIdx.length) {
+                        ir.data.PositionsByCarIdx.push({});
+                    }
+                    if (session.ResultsPositions) {
+                        result.push(Array.from(session.ResultsPositions).map((position) =>
+                            (ir.data.PositionsByCarIdx[i][position.CarIdx] = position)));
+                    } else {
+                        result.push(undefined);
+                    }
+                }
+                return result;
+            })();
+        };
 
-        updateQualifyResultsByCarIdx = ->
-            ir.data.QualifyResultsByCarIdx ?= {}
-            results = ir.data.QualifyResultsInfo?.Results or ir.data.SessionInfo.Sessions[ir.data.SessionNum]?.QualifyPositions or []
-            for position in results
-                ir.data.QualifyResultsByCarIdx[position.CarIdx] = position
+        var updateQualifyResultsByCarIdx = function() {
+            if (ir.data.QualifyResultsByCarIdx == null) { ir.data.QualifyResultsByCarIdx = {}; }
+            const results = (ir.data.QualifyResultsInfo != null ? ir.data.QualifyResultsInfo.Results : undefined) || (ir.data.SessionInfo.Sessions[ir.data.SessionNum] != null ? ir.data.SessionInfo.Sessions[ir.data.SessionNum].QualifyPositions : undefined) || [];
+            return Array.from(results).map((position) =>
+                (ir.data.QualifyResultsByCarIdx[position.CarIdx] = position));
+        };
 
-        $rootScope.ir = ir.data
-        return ir
+        $rootScope.ir = ir.data;
+        return ir;
+    };
 
-    return
+});
