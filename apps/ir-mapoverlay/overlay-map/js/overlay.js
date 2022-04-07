@@ -2,7 +2,6 @@
 // Sanity-check the conversion and remove this comment.
 /*
  * decaffeinate suggestions:
- * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
  * DS205: Consider reworking code to avoid use of IIFEs
  * DS207: Consider shorter variations of null checks
@@ -13,6 +12,8 @@ window.app = angular.module('overlay-map', [
     'ngSanitize'
 ]);
 
+const normalizeValue = (min: number, max: number, value: number): number => Math.max(min, Math.min(max, value))
+
 app.config($locationProvider => $locationProvider.hashPrefix(''));
 
 app.service('config', function($location) {
@@ -20,16 +21,16 @@ app.service('config', function($location) {
     const vars = $location.search();
 
     let fps = parseInt(vars.fps) || 30;
-    fps = Math.max(1, Math.min(60, fps));
+    fps = normalizeValue(1, 60, fps);
 
     let baseStrokeWidth = parseInt(vars.trackWidth) || 10;
-    baseStrokeWidth = Math.max(1, Math.min(30, baseStrokeWidth));
+    baseStrokeWidth = normalizeValue(1, 30, baseStrokeWidth);
 
     let driverCircle = parseInt(vars.driverCircle) || 12;
-    driverCircle = Math.max(1, Math.min(30, driverCircle));
+    driverCircle = normalizeValue(1, 30, driverCircle));
 
     let driverHighlightWidth = parseInt(vars.driverHighlightWidth) || 4;
-    driverHighlightWidth = Math.max(3, Math.min(10, driverHighlightWidth));
+    driverHighlightWidth = normalizeValue(3, 10, driverHighlightWidth));
 
     let driverGroups = vars.dGrp;
     let driverGroupsColors = vars.dGrpClr;
@@ -199,58 +200,55 @@ app.service('iRData', function($rootScope, config) {
     };
 
     ir.onUpdate = function(keys) {
-        if (Array.from(keys).includes('DriverInfo')) {
+        if (keys.includes('DriverInfo')) {
             updateDriversByCarIdx();
             updateCarClassIDs();
         }
-        if (Array.from(keys).includes('SessionInfo')) {
+        if (keys.includes('SessionInfo')) {
             updatePositionsByCarIdx();
         }
-        if (Array.from(keys).includes('QualifyResultsInfo')) {
+        if (keys.includes('QualifyResultsInfo')) {
             updateQualifyResultsByCarIdx();
         }
         return $rootScope.$apply();
     };
 
-    var updateDriversByCarIdx = function() {
+    const updateDriversByCarIdx = () => {
         ir.data.myCarIdx = ir.data.DriverInfo.DriverCarIdx;
         if (ir.data.DriversByCarIdx == null) { ir.data.DriversByCarIdx = {}; }
-        return Array.from(ir.data.DriverInfo.Drivers).map((driver) =>
+        return ir.data.DriverInfo.Drivers.map((driver) =>
             (ir.data.DriversByCarIdx[driver.CarIdx] = driver));
     };
 
-    var updatePositionsByCarIdx = function() {
+    const updatePositionsByCarIdx = () => {
         if (ir.data.PositionsByCarIdx == null) { ir.data.PositionsByCarIdx = []; }
-        return (() => {
-            const result = [];
-            for (var i = 0; i < ir.data.SessionInfo.Sessions.length; i++) {
-                const session = ir.data.SessionInfo.Sessions[i];
-                while (i >= ir.data.PositionsByCarIdx.length) {
-                    ir.data.PositionsByCarIdx.push({});
-                }
-                if (session.ResultsPositions) {
-                    result.push(Array.from(session.ResultsPositions).map((position) =>
-                        (ir.data.PositionsByCarIdx[i][position.CarIdx] = position)));
-                } else {
-                    result.push(undefined);
-                }
+
+        const sessions = ir.data.SessionInfo.Sessions
+        return sessions.map((session, index) => {
+            while (index >= ir.data.PostionsByCarIdx.length) {
+                ir.data.PositionsByCarIdx.push({});
             }
-            return result;
-        })();
+
+            if (session.ResultsPositions) {
+                return session.ResultsPositions.map((position) => ir.data.PositionsByCarIdx[i][position.CarIdx] = position)
+            } else {
+                return null
+            }
+        }).filter(Boolean);
     };
 
-    var updateQualifyResultsByCarIdx = function() {
+    const updateQualifyResultsByCarIdx = () => {
         if (ir.data.QualifyResultsByCarIdx == null) { ir.data.QualifyResultsByCarIdx = {}; }
-        return Array.from(ir.data.QualifyResultsInfo.Results).map((position) =>
+        return ir.data.QualifyResultsInfo.Results.map((position) =>
             (ir.data.QualifyResultsByCarIdx[position.CarIdx] = position));
     };
 
     var updateCarClassIDs = () => (() => {
         const result = [];
-        for (let driver of Array.from(ir.data.DriverInfo.Drivers)) {
+        for (let driver of ir.data.DriverInfo.Drivers) {
             const carClassId = driver.CarClassID;
             if (ir.data.CarClassIDs == null) { ir.data.CarClassIDs = []; }
-            if ((driver.UserID !== -1) && (driver.IsSpectator === 0) && !Array.from(ir.data.CarClassIDs).includes(carClassId)) {
+            if ((driver.UserID !== -1) && (driver.IsSpectator === 0) && !ir.data.CarClassIDs.includes(carClassId)) {
                 result.push(ir.data.CarClassIDs.push(carClassId));
             } else {
                 result.push(undefined);
@@ -365,7 +363,7 @@ app.controller('MapCtrl', function($scope, $element, iRData, config) {
         mapVars.trackLength = mapVars.track.length();
 
         if (trackOverlay.tracksById[trackId].extendedLine) {
-            for (let extendedLine of Array.from(trackOverlay.tracksById[trackId].extendedLine)) {
+            for (let extendedLine of trackOverlay.tracksById[trackId].extendedLine) {
                 drawStartFinishLine(extendedLine);
             }
         } else {
@@ -545,7 +543,7 @@ app.controller('MapCtrl', function($scope, $element, iRData, config) {
                         if (config.driverGroupsEnabled) {
                             for (let i = 0; i < config.driverGroups.length; i++) {
                                 group = config.driverGroups[i];
-                                if ((Array.from(group).includes(ir.DriversByCarIdx[carIdx].UserID)) || (ir.WeekendInfo.TeamRacing && Array.from(group).includes(ir.DriversByCarIdx[carIdx].TeamID))) {
+                                if ((group.includes(ir.DriversByCarIdx[carIdx].UserID)) || (ir.WeekendInfo.TeamRacing && group.includes(ir.DriversByCarIdx[carIdx].TeamID))) {
                                     circleColor = config.driverGroupsColors[i];
                                     numberColor = config.mapOptions.styles.driver.highlightNum;
                                     drawClassBubble = true;
@@ -671,7 +669,7 @@ app.controller('MapCtrl', function($scope, $element, iRData, config) {
 
         if (carClassColor === 0) {
             const carClassId = ir.DriversByCarIdx[carIdx].CarClassID;
-            for (let d of Array.from(ir.DriverInfo.Drivers)) {
+            for (let d of ir.DriverInfo.Drivers) {
                 if ((d.CarClassID === carClassId) && d.CarClassColor) {
                     carClassColor = d.CarClassColor;
                 }
